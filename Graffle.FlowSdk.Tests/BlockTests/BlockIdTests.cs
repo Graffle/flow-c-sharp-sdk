@@ -8,6 +8,7 @@ using System.Text.Json;
 namespace Graffle.FlowSdk.Tests.BlockTests
 {
     [TestClass]
+    [Ignore]
     public class BlockIdTests
     {
         private FlowClient flowClient { get; }

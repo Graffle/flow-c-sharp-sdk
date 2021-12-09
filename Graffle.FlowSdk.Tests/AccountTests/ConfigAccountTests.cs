@@ -9,6 +9,7 @@ using System.Text.Json;
 namespace Graffle.FlowSdk.Tests.AccountTests
 {
     [TestClass]
+    [Ignore]
     public class ConfigAccountTests
     {
         private FlowClient flowClient { get; }
