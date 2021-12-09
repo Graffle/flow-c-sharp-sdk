@@ -3,7 +3,6 @@ using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types
 {
-
     public class Word64Type : FlowValueType<UInt64>
     {
         public Word64Type(UInt64 value) : base(value)

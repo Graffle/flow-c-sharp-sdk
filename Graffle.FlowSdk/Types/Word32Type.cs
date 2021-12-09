@@ -3,7 +3,6 @@ using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types
 {
-
     public class Word32Type : FlowValueType<uint>
     {
         public Word32Type(uint value) : base(value)

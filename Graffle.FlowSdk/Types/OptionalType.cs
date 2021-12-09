@@ -29,7 +29,6 @@ namespace Graffle.FlowSdk.Types
                 var result = new OptionalType(FlowValueType.CreateFromCadence(type, jsonObject));
                 return result;
             }
-
         }
 
         public override string AsJsonCadenceDataFormat()

@@ -35,8 +35,6 @@ namespace Graffle.FlowSdk.Types
 
             var result = new CapabilityType(path,address,borrow);
             return result;
-
-
         }
 
         public override string AsJsonCadenceDataFormat()
