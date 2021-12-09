@@ -35,6 +35,5 @@ namespace Graffle.FlowSdk.Tests.BlockTests
             Assert.AreEqual(result.Data, "Hello World");
             Assert.AreEqual(result.Type, "String");
         }
-
     }
 }

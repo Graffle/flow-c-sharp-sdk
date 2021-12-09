@@ -4,24 +4,8 @@ using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types
 {
-
-    public static class Extensions
-    {
-        public static dynamic ToValueData(this ArrayType x)
-        {
-            var result = new List<dynamic>();
-            foreach (var item in x.Data)
-            {
-                result.Add(((dynamic)item).Data);
-            }
-
-            return result;
-        }
-    }
-
     public class ArrayType : FlowValueType<List<FlowValueType>>
     {
-
         public ArrayType(List<FlowValueType> data) : base(data)
         {
         }
@@ -34,9 +18,6 @@ namespace Graffle.FlowSdk.Types
 
             return $"{{\"type\":\"{Type}\",\"value\":\"[{jsonArray}\"]}}";
         }
-
-        
-
 
         public static ArrayType FromJson(string json)
         {

@@ -10,7 +10,7 @@ namespace Graffle.FlowSdk.Types
             var parsedJson = JsonDocument.Parse(json);
             var value = parsedJson.RootElement.GetProperty("value");
             var attempt = System.Numerics.BigInteger.Parse(value.GetString());
-            return new UInt256Type(attempt); ;
+            return new UInt256Type(attempt);
         }
         public UInt256Type(System.Numerics.BigInteger value) : base(value)
         {

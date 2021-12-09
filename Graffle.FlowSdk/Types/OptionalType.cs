@@ -45,6 +45,5 @@ namespace Graffle.FlowSdk.Types
         
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
-
     }
 }

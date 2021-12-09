@@ -24,6 +24,5 @@ namespace Graffle.FlowSdk.Tests.AccountTests
             Assert.AreEqual((UInt32)2, account.Keys[0].SignAlgo);
             Assert.AreEqual((UInt32)3, account.Keys[0].HashAlgo);            
         }
-
     }
 }

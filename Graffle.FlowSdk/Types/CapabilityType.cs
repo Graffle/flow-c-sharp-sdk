@@ -5,7 +5,6 @@ namespace Graffle.FlowSdk.Types
 {
     public class PathType : FlowValueType
     {
-
         private const string DOMAIN_NAME = "domain";
         private const string IDENTIFIER_NAME = "identifier";
 
@@ -32,8 +31,6 @@ namespace Graffle.FlowSdk.Types
 
             var result = new PathType(domain,identifier);
             return result;
-
-
         }
 
         public override string AsJsonCadenceDataFormat()

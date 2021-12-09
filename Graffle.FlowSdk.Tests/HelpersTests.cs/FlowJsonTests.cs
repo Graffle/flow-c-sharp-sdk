@@ -23,6 +23,5 @@ namespace Graffle.FlowSdk.Tests.HelpersTests
             Assert.AreEqual("f8d6e0586b0a20c7", emulatorAccount.Address);
             Assert.AreEqual("17011acae35618eb2a9c1670830cf01fb9b6160cf2c63a11d45e5c57089f3574", emulatorAccount.Key);
         }
-
     }
 }

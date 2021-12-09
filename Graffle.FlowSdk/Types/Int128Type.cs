@@ -10,7 +10,7 @@ namespace Graffle.FlowSdk.Types
             var parsedJson = JsonDocument.Parse(json);
             var value = parsedJson.RootElement.GetProperty("value");
             var attempt = System.Numerics.BigInteger.Parse(value.GetString());
-            return new Int128Type(attempt); ;
+            return new Int128Type(attempt);
         }
         public Int128Type(System.Numerics.BigInteger value) : base(value)
         {

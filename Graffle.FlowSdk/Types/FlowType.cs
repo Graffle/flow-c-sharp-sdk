@@ -15,7 +15,6 @@ namespace Graffle.FlowSdk.Types
             var staticType = value.GetProperty("staticType").ToString();
             var result = new FlowType(staticType);
             return result;
-
         }
 
         public override string Type

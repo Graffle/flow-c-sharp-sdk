@@ -5,7 +5,6 @@ namespace Graffle.FlowSdk.Types
 {
     public class CapabilityType : FlowValueType
     {
-
         private const string PATH_NAME = "path";
         private const string ADDRESS_NAME = "address";
         private const string BORROW_NAME = "borrowType";
@@ -48,6 +47,5 @@ namespace Graffle.FlowSdk.Types
         
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
-
     }
 }

@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 
 namespace Graffle.FlowSdk {
-
     public static class Helpers {
         public static FlowJson LoadFlowJson(string path = null) {
             if(string.IsNullOrWhiteSpace(path)) {

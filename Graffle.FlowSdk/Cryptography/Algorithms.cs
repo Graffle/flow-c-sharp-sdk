@@ -1,4 +1,3 @@
-
 namespace Graffle.FlowSdk.Cryptography {
     public enum SignatureAlgorithm
     {

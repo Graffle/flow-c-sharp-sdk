@@ -83,8 +83,6 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual(cadenceExpected, cadenceValue);
         }
 
-
-
         [TestMethod]
         public void Given_Valid_Cadence_Json_Create_Word32()
         {

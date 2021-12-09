@@ -3,7 +3,6 @@ using System;
 using System.Security.Cryptography;
 
 namespace Graffle.FlowSdk.Cryptography {
-
     public static class Hashing {
         public static byte[] CalculateHash(byte[] bytes, HashAlgorithm algorithm)
         {

@@ -10,7 +10,7 @@ namespace Graffle.FlowSdk.Types
             var parsedJson = JsonDocument.Parse(json);
             var value = parsedJson.RootElement.GetProperty("value");
             var attempt = UInt64.Parse(value.GetString());
-            return new UInt64Type(attempt); ;
+            return new UInt64Type(attempt);
         }
         public UInt64Type(UInt64 value) : base(value)
         {
