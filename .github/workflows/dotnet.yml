@@ -29,4 +29,3 @@ jobs:
       with:
           PROJECT_FILE_PATH: Graffle.FlowSdk/Graffle.FlowSdk.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          VERSION_STATIC: 0.1.0-prerelease
