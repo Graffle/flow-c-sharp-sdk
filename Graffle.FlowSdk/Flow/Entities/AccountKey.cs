@@ -8,8 +8,8 @@ namespace Flow.Entities {
     public sealed partial class AccountKey {
         public string PrivateKey { get; set; }
         public IMessageSigner Signer { get; set; }
-        public SignatureAlgorithm SignatureAlgorithm { get; set; }        
-        public HashAlgorithm HashAlgorithm { get; set; }
+        public SignatureAlgorithm SignatureAlgorithm => (SignatureAlgorithm)this.SignAlgo;       
+        public HashAlgorithm HashAlgorithm => (HashAlgorithm)this.HashAlgo;
 
         public static AccountKey GenerateRandomEcdsaKey(SignatureAlgorithm signatureAlgorithm, HashAlgorithm hashAlgorithm, uint weight = 1000)
         {
@@ -21,9 +21,9 @@ namespace Flow.Entities {
             {
                 PrivateKey = privateKey,
                 PublicKey = publicKey.HexToByteString(),
-                SignatureAlgorithm = signatureAlgorithm,
-                HashAlgorithm = hashAlgorithm,
-                Weight = weight
+                Weight = weight,
+                SignAlgo = (uint)signatureAlgorithm,
+                HashAlgo = (uint)hashAlgorithm,
             };
         }
 

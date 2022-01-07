@@ -16,7 +16,7 @@ namespace Graffle.FlowSdk.Types
             var jsonElements = Data.Select(x => x.AsJsonCadenceDataFormat());
             var jsonArray = string.Join(',', jsonElements);
 
-            return $"{{\"type\":\"{Type}\",\"value\":\"[{jsonArray}\"]}}";
+            return $"{{\"type\":\"{Type}\",\"value\":[{jsonArray}]}}";
         }
 
         public static ArrayType FromJson(string json)
