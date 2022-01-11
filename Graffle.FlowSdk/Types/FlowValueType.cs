@@ -12,7 +12,7 @@ namespace Graffle.FlowSdk.Types
         protected const string ADDRESS_TYPE_NAME = "Address";
 
         protected const string OPTIONAL_TYPE_NAME = "Optional";
-        
+
         protected const string PATH_TYPE_NAME = "Path";
         protected const string CAPABILITY_TYPE_NAME = "Capability";
 
@@ -58,6 +58,13 @@ namespace Graffle.FlowSdk.Types
             var format = this.AsJsonCadenceDataFormat();
             var bytes = Encoding.ASCII.GetBytes(format);
             return ByteString.CopyFrom(bytes);
+        }
+
+        public static FlowValueType CreateFromCadence(string cadenceJsonValue)
+        {
+            var parsedJson = JsonDocument.Parse(cadenceJsonValue);
+            var type = parsedJson.RootElement.GetProperty("type").ToString();
+            return CreateFromCadence(type,cadenceJsonValue);
         }
 
         public static FlowValueType CreateFromCadence(string type, string cadenceJsonValue)
@@ -142,7 +149,7 @@ namespace Graffle.FlowSdk.Types
         }
 
         public virtual T Data { get; }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }
