@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -12,11 +13,23 @@ namespace Graffle.FlowSdk.Types
 
         public override string Type => "Array";
 
-        public override string AsJsonCadenceDataFormat() {
+        public override string AsJsonCadenceDataFormat()
+        {
             var jsonElements = Data.Select(x => x.AsJsonCadenceDataFormat());
             var jsonArray = string.Join(',', jsonElements);
 
             return $"{{\"type\":\"{Type}\",\"value\":[{jsonArray}]}}";
+        }
+
+        public IEnumerable<object> Values()
+        {
+            var result = new List<object>();
+            foreach (var item in Data)
+            {
+               var dynamicItem = (dynamic)item;
+               result.Add(dynamicItem);
+            }
+            return result;
         }
 
         public static ArrayType FromJson(string json)
