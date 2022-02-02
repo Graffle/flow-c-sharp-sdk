@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Google.Protobuf;
 
 namespace Graffle.FlowSdk.Types
@@ -49,6 +50,7 @@ namespace Graffle.FlowSdk.Types
         protected const string WORD64_TYPE_NAME = "Word64";
 
 
+        [JsonPropertyName("type")]
         public abstract string Type { get; }
         public abstract string AsJsonCadenceDataFormat();
         public abstract string DataAsJson();
@@ -64,7 +66,7 @@ namespace Graffle.FlowSdk.Types
         {
             var parsedJson = JsonDocument.Parse(cadenceJsonValue);
             var type = parsedJson.RootElement.GetProperty("type").ToString();
-            return CreateFromCadence(type,cadenceJsonValue);
+            return CreateFromCadence(type, cadenceJsonValue);
         }
 
         public static FlowValueType CreateFromCadence(string type, string cadenceJsonValue)
@@ -148,6 +150,7 @@ namespace Graffle.FlowSdk.Types
             Data = data;
         }
 
+        [JsonPropertyName("data")]
         public virtual T Data { get; }
 
         public override string DataAsJson()

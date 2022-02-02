@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -16,7 +16,10 @@ namespace Graffle.FlowSdk.Types
             Data = value;
         }
 
+        [JsonPropertyName("type")]
         public override string Type => "Dictionary";
+
+        [JsonPropertyName("data")]
         public Dictionary<FlowValueType, FlowValueType> Data { get; set; } = new Dictionary<FlowValueType, FlowValueType>();
 
         public static DictionaryType FromJson(string json)
@@ -78,7 +81,7 @@ namespace Graffle.FlowSdk.Types
             var result = $"{{\"type\":\"{Type}\",\"value\":{arrayString}}}";
             return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }

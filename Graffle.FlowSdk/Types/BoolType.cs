@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -15,10 +16,11 @@ namespace Graffle.FlowSdk.Types
             return new BoolType(value.GetBoolean());
         }
 
+        [JsonPropertyName("type")]
         public override string Type
-            => BOOL_TYPE_NAME;
+                   => BOOL_TYPE_NAME;
 
         public override string AsJsonCadenceDataFormat()
-            => System.Text.Json.JsonSerializer.Serialize(new {type = Type, value = Data});
+            => System.Text.Json.JsonSerializer.Serialize(new { type = Type, value = Data });
     }
 }

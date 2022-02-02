@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -10,7 +10,7 @@ namespace Graffle.FlowSdk.Types
         public ArrayType(List<FlowValueType> data) : base(data)
         {
         }
-
+        [JsonPropertyName("type")]
         public override string Type => "Array";
 
         public override string AsJsonCadenceDataFormat()
@@ -26,8 +26,8 @@ namespace Graffle.FlowSdk.Types
             var result = new List<object>();
             foreach (var item in Data)
             {
-               var dynamicItem = (dynamic)item;
-               result.Add(dynamicItem);
+                var dynamicItem = (dynamic)item;
+                result.Add(dynamicItem);
             }
             return result;
         }

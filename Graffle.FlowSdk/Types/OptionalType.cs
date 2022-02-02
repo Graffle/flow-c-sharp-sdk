@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -9,8 +10,10 @@ namespace Graffle.FlowSdk.Types
             Data = value;
         }
 
+        [JsonPropertyName("type")]
         public override string Type => OPTIONAL_TYPE_NAME;
 
+        [JsonPropertyName("data")]
         public FlowValueType Data { get; set; }
 
         public static OptionalType FromJson(string json)
@@ -41,7 +44,7 @@ namespace Graffle.FlowSdk.Types
                 result = $"{{\"type\":\"{Type}\",\"value\":{valueCadence}}}";
             return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }
