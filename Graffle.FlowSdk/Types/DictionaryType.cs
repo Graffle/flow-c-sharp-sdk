@@ -16,6 +16,7 @@ namespace Graffle.FlowSdk.Types
             Data = value;
         }
 
+        [JsonPropertyName("type")]
         public override string Type => "Dictionary";
 
         [JsonPropertyName("data")]
@@ -80,7 +81,7 @@ namespace Graffle.FlowSdk.Types
             var result = $"{{\"type\":\"{Type}\",\"value\":{arrayString}}}";
             return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }
