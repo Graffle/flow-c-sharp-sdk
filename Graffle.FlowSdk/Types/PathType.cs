@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -17,12 +18,19 @@ namespace Graffle.FlowSdk.Types
             Data.Add(BORROW_NAME, borrowType);
         }
 
+        [JsonPropertyName("path")]
         public string Path => Data[PATH_NAME];
+
+        [JsonPropertyName("address")]
         public string Address => Data[ADDRESS_NAME];
+
+        [JsonPropertyName("borrowType")]
         public string BorrowType => Data[BORROW_NAME];
 
+        [JsonPropertyName("type")]
         public override string Type => CAPABILITY_TYPE_NAME;
 
+        [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }
 
         public static CapabilityType FromJson(string json)
@@ -33,16 +41,16 @@ namespace Graffle.FlowSdk.Types
             var address = attempt.GetProperty(ADDRESS_NAME).ToString();
             var borrow = attempt.GetProperty(BORROW_NAME).ToString();
 
-            var result = new CapabilityType(path,address,borrow);
+            var result = new CapabilityType(path, address, borrow);
             return result;
         }
 
         public override string AsJsonCadenceDataFormat()
         {
-           var result = $"{{\"type\":\"{Type}\",\"value\":{{\"path\":\"{Path}\",\"address\":\"{Address}\",\"borrowType\":\"{BorrowType}\"}}}}";
-           return result;
+            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"path\":\"{Path}\",\"address\":\"{Address}\",\"borrowType\":\"{BorrowType}\"}}}}";
+            return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }

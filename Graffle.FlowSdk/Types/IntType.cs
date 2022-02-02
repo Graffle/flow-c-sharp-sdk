@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -19,8 +20,9 @@ namespace Graffle.FlowSdk.Types
         {
         }
 
+        [JsonPropertyName("type")]
         public override string Type
-            => INT_TYPE_NAME;
+                    => INT_TYPE_NAME;
 
         public override string AsJsonCadenceDataFormat()
             => $"{{\"type\":\"{Type}\",\"value\":\"{Data}\"}}";

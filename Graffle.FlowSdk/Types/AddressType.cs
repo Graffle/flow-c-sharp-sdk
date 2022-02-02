@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -8,6 +9,7 @@ namespace Graffle.FlowSdk.Types
         {
         }
 
+        [JsonPropertyName("type")]
         public override string Type
             => ADDRESS_TYPE_NAME;
 

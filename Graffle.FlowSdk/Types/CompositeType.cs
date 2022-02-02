@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -12,9 +13,13 @@ namespace Graffle.FlowSdk.Types
             Type = type;
         }
 
+        [JsonPropertyName("type")]
         public override string Type { get; }
+
+        [JsonPropertyName("id")]
         public string Id { get; set; }
 
+        [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }
 
         public override string AsJsonCadenceDataFormat()
@@ -28,7 +33,7 @@ namespace Graffle.FlowSdk.Types
             var result = $"{{\"type\":\"{Type}\",\"value\":{{\"id\":\"{Id}\",\"fields\":[{string.Join(',', fields)}]}}}}";
             return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }

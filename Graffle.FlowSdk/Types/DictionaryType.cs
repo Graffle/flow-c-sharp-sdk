@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -17,6 +17,8 @@ namespace Graffle.FlowSdk.Types
         }
 
         public override string Type => "Dictionary";
+
+        [JsonPropertyName("data")]
         public Dictionary<FlowValueType, FlowValueType> Data { get; set; } = new Dictionary<FlowValueType, FlowValueType>();
 
         public static DictionaryType FromJson(string json)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -15,11 +16,16 @@ namespace Graffle.FlowSdk.Types
             Data.Add(IDENTIFIER_NAME, identifier);
         }
 
+        [JsonPropertyName("domain")]
         public string Domain => Data[DOMAIN_NAME];
+
+        [JsonPropertyName("identifier")]
         public string Identifier => Data[IDENTIFIER_NAME];
 
+        [JsonPropertyName("type")]
         public override string Type => PATH_TYPE_NAME;
 
+        [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }
 
         public static PathType FromJson(string json)
@@ -29,16 +35,16 @@ namespace Graffle.FlowSdk.Types
             var domain = attempt.GetProperty(DOMAIN_NAME).ToString();
             var identifier = attempt.GetProperty(IDENTIFIER_NAME).ToString();
 
-            var result = new PathType(domain,identifier);
+            var result = new PathType(domain, identifier);
             return result;
         }
 
         public override string AsJsonCadenceDataFormat()
         {
-           var result = $"{{\"type\":\"{Type}\",\"value\":{{\"domain\":\"{Domain}\",\"identifier\":\"{Identifier}\"}}}}";
-           return result;
+            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"domain\":\"{Domain}\",\"identifier\":\"{Identifier}\"}}}}";
+            return result;
         }
-        
+
         public override string DataAsJson()
             => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }
