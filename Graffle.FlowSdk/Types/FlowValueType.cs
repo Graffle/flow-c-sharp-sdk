@@ -38,6 +38,7 @@ namespace Graffle.FlowSdk.Types
         protected const string INT256_TYPE_NAME = "Int256";
 
         protected const string UFIX64_TYPE_NAME = "UFix64";
+        protected const string FIX64_TYPE_NAME = "Fix64";
 
         protected const string DICTIONARY_TYPE_NAME = "Dictionary";
         protected const string ARRAY_TYPE_NAME = "Array";
@@ -90,6 +91,7 @@ namespace Graffle.FlowSdk.Types
                 INT64_TYPE_NAME => Int64Type.FromJson(cadenceJsonValue),
                 INT128_TYPE_NAME => Int128Type.FromJson(cadenceJsonValue),
                 INT256_TYPE_NAME => Int256Type.FromJson(cadenceJsonValue),
+                FIX64_TYPE_NAME => Fix64Type.FromJson(cadenceJsonValue),
                 UFIX64_TYPE_NAME => UFix64Type.FromJson(cadenceJsonValue),
                 DICTIONARY_TYPE_NAME => DictionaryType.FromJson(cadenceJsonValue),
                 ARRAY_TYPE_NAME => ArrayType.FromJson(cadenceJsonValue),
@@ -127,6 +129,7 @@ namespace Graffle.FlowSdk.Types
                 INT64_TYPE_NAME => new Int64Type(value),
                 INT128_TYPE_NAME => new Int128Type(value),
                 INT256_TYPE_NAME => new Int256Type(value),
+                FIX64_TYPE_NAME => new Fix64Type(value),
                 UFIX64_TYPE_NAME => new UFix64Type(value),
                 DICTIONARY_TYPE_NAME => new DictionaryType(value),
                 ARRAY_TYPE_NAME => value is string ? ArrayType.CreateFromCadence(type, value) : new ArrayType(value),

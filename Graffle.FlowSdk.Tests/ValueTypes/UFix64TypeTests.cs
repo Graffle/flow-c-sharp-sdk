@@ -11,8 +11,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         public void Given_Valid_Cadence_Json_Create_ValueType()
         {
             var cadenceJsonString = @"{""type"":""UFix64"",""value"":""100""}";
-            var flowValueType = UInt32Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "UInt32");
+            var flowValueType = UFix64Type.FromJson(cadenceJsonString);
+            Assert.AreEqual(flowValueType.Type, "UFix64");
             Assert.AreEqual(flowValueType.Data, 100m);
         }
 
