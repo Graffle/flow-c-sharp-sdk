@@ -28,7 +28,7 @@ namespace Graffle.FlowSdk.Types
         public string BorrowType => Data[BORROW_NAME];
 
         [JsonPropertyName("type")]
-        public override string Type => CAPABILITY_TYPE_NAME;
+        public override string Type => Constants.CAPABILITY_TYPE_NAME;
 
         [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }

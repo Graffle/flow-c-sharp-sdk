@@ -23,7 +23,7 @@ namespace Graffle.FlowSdk.Types
         public string Identifier => Data[IDENTIFIER_NAME];
 
         [JsonPropertyName("type")]
-        public override string Type => PATH_TYPE_NAME;
+        public override string Type => Constants.PATH_TYPE_NAME;
 
         [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }

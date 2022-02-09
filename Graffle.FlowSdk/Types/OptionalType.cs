@@ -11,7 +11,7 @@ namespace Graffle.FlowSdk.Types
         }
 
         [JsonPropertyName("type")]
-        public override string Type => OPTIONAL_TYPE_NAME;
+        public override string Type => Constants.OPTIONAL_TYPE_NAME;
 
         [JsonPropertyName("data")]
         public FlowValueType Data { get; set; }
