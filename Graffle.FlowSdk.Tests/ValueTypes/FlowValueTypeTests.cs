@@ -58,5 +58,13 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var int16Data = optional.Data as Int16Type;
             Assert.AreEqual(123, int16Data.Data);
         }
+
+        [TestMethod]
+        public void Create_ValidTypeInvalidValue_ThrowsInvalidOperationException()
+        {
+            var ex = Assert.ThrowsException<InvalidOperationException>(() => FlowValueType.Create("String", 123));
+
+            Assert.IsNotNull(ex.InnerException);
+        }
     }
 }

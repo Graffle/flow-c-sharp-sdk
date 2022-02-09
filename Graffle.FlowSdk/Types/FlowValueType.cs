@@ -133,7 +133,16 @@ namespace Graffle.FlowSdk.Types
 
             if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))
             {
-                return ctor(value);
+                try
+                {
+                    return ctor(value);
+                }
+                catch (Exception ex)
+                {
+                    //If we're going to fail here it will probably be because value's type doesnt match the FlowType's constructor
+                    //Wrap this exception so it makes more sense
+                    throw new InvalidOperationException($"Failed to create Flow Value of type {type} ({typeToResolve}) with value {value}", ex);
+                }
             }
             else
             {
