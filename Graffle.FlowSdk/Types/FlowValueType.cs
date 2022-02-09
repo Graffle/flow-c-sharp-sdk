@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 using Google.Protobuf;
 using System.Linq.Expressions;
 using System.Reflection;
+
 namespace Graffle.FlowSdk.Types
 {
     public abstract class FlowValueType
@@ -80,7 +81,8 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD16_TYPE_NAME, (arg) => new Word16Type(arg) },
                 { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
-               // { Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
+                //TODO
+                //{ Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
                 //{ Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg)},
             };
         }
