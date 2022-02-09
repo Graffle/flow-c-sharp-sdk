@@ -433,5 +433,18 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var resultData = (result as Word64Type).Data;
             Assert.AreEqual(expectedData, resultData);
         }
+
+        [TestMethod]
+        public void Create_FlowType_ReturnsFlowType()
+        {
+            var expectedData = "hello";
+
+            var result = FlowValueType.Create("Type", expectedData);
+
+            Assert.IsInstanceOfType(result, typeof(FlowType));
+
+            var resultData = (result as FlowType).Data;
+            Assert.AreEqual(expectedData, resultData);
+        }
     }
 }
