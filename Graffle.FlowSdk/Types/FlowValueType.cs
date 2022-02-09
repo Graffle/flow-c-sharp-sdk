@@ -5,8 +5,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Google.Protobuf;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Graffle.FlowSdk.Types
 {
@@ -127,19 +125,19 @@ namespace Graffle.FlowSdk.Types
                 throw new ArgumentNullException(nameof(type));
 
             var splitValues = type.Split('|');
-            if (type == Constants.OPTIONAL_TYPE_NAME)
+            string typeToResolve = splitValues.First();
+            if (typeToResolve == Constants.OPTIONAL_TYPE_NAME)
             {
                 return new OptionalType(Create(splitValues.Last(), value));
             }
 
-            string typeToResolve = splitValues.First();
             if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))
             {
                 return ctor(value);
             }
             else
             {
-                throw new ArgumentException($"Flow Value Type of {type} does not exist.", nameof(type));
+                throw new ArgumentException($"Flow Value Type of {type} ({typeToResolve}) does not exist.", nameof(type));
             }
         }
     }
