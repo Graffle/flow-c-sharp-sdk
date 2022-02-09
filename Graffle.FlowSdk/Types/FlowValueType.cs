@@ -10,12 +10,12 @@ namespace Graffle.FlowSdk.Types
 {
     public abstract class FlowValueType
     {
-        public delegate FlowValueType FromCadenceJson(string json);
-        private static readonly Dictionary<string, FromCadenceJson> TypeNameToConverter;
+        private delegate FlowValueType FromCadenceJson(string json);
+        private static readonly Dictionary<string, FromCadenceJson> typeNameToConverter;
 
         static FlowValueType()
         {
-            TypeNameToConverter = new Dictionary<string, FromCadenceJson>()
+            typeNameToConverter = new Dictionary<string, FromCadenceJson>()
             {
                 { Constants.ADDRESS_TYPE_NAME, AddressType.FromJson },
                 { Constants.OPTIONAL_TYPE_NAME , OptionalType.FromJson },
@@ -72,10 +72,10 @@ namespace Graffle.FlowSdk.Types
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
-            if (!TypeNameToConverter.ContainsKey(type))
+            if (!typeNameToConverter.ContainsKey(type))
                 throw new ArgumentException($"Flow Value Type of {type} does not exist.", nameof(type));
 
-            return TypeNameToConverter[type](cadenceJsonValue);
+            return typeNameToConverter[type](cadenceJsonValue);
         }
 
         public static FlowValueType Create(string type, dynamic value)
