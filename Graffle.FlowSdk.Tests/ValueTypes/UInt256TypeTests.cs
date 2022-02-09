@@ -2,7 +2,6 @@ using Graffle.FlowSdk.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
 
-
 namespace Graffle.FlowSdk.Tests.ValueTypes
 {
     [TestClass]
