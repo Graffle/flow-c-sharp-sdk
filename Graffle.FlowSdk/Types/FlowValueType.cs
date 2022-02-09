@@ -53,7 +53,6 @@ namespace Graffle.FlowSdk.Types
             typeNameToCtor = new Dictionary<string, FlowValueTypeConstructor>()
             {
                 { Constants.ADDRESS_TYPE_NAME, (arg) => new AddressType(arg)},
-                { Constants.OPTIONAL_TYPE_NAME, (arg) => new OptionalType(arg)}, //todo pretty sure this isnt needed
                 { Constants.STRING_TYPE_NAME, (arg) => new StringType(arg) },
                 { Constants.UINT_TYPE_NAME, (arg) => new UIntType(arg) },
                 { Constants.UINT8_TYPE_NAME, (arg) => new UInt8Type(arg) },
