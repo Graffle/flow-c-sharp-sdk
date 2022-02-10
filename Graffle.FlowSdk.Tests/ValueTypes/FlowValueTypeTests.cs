@@ -15,7 +15,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Address"",""value"":""0x66d6f450e25a4e22""}";
             var flowValueType = FlowValueType.CreateFromCadence(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Address");
+            Assert.AreEqual("Address", flowValueType.Type);
         }
 
         [TestMethod]

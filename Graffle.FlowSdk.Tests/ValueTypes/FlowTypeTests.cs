@@ -12,16 +12,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Type"",""value"":{""staticType"": ""A.3c64bbf9200963d9.FazeUtilityCoin.Vault""}}";
             var flowValueType = FlowType.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Type");
-            Assert.AreEqual(flowValueType.Data, "A.3c64bbf9200963d9.FazeUtilityCoin.Vault");
+            Assert.AreEqual("Type", flowValueType.Type);
+            Assert.AreEqual("A.3c64bbf9200963d9.FazeUtilityCoin.Vault", flowValueType.Data);
         }
 
         [TestMethod]
         public void Given_Type_Value_Create_FlowType()
         {
             var flowValueType = new FlowType("A.3c64bbf9200963d9.FazeUtilityCoin.Vault");
-            Assert.AreEqual(flowValueType.Type, "Type");
-            Assert.AreEqual(flowValueType.Data, "A.3c64bbf9200963d9.FazeUtilityCoin.Vault");
+            Assert.AreEqual("Type", flowValueType.Type);
+            Assert.AreEqual("A.3c64bbf9200963d9.FazeUtilityCoin.Vault", flowValueType.Data);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var flowValueType = new FlowType("A.3c64bbf9200963d9.FazeUtilityCoin.Vault");
             var cadenceValue = flowValueType.AsJsonCadenceDataFormat();
             var cadenceExpected = @"{""type"":""Type"",""value"":{""staticType"":""A.3c64bbf9200963d9.FazeUtilityCoin.Vault""}}";
-            Assert.AreEqual(cadenceExpected,cadenceValue);
+            Assert.AreEqual(cadenceExpected, cadenceValue);
         }
     }
 }

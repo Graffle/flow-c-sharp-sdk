@@ -12,20 +12,20 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Path"",""value"":{""domain"":""testDomain"",""identifier"":""testIdentifier""}}";
             var flowValueType = PathType.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Path");
-            Assert.AreEqual(flowValueType.Data.Count, 2);
-            Assert.AreEqual(flowValueType.Domain, "testDomain");
-            Assert.AreEqual(flowValueType.Identifier, "testIdentifier");
+            Assert.AreEqual("Path", flowValueType.Type);
+            Assert.AreEqual(2, flowValueType.Data.Count);
+            Assert.AreEqual("testDomain", flowValueType.Domain);
+            Assert.AreEqual("testIdentifier", flowValueType.Identifier);
         }
 
         [TestMethod]
         public void Given_PathType_Value_Create_PathType()
         {
             var flowValueType = new PathType("testDomain", "testIdentifier");
-            Assert.AreEqual(flowValueType.Type, "Path");
-            Assert.AreEqual(flowValueType.Data.Count, 2);
-            Assert.AreEqual(flowValueType.Domain, "testDomain");
-            Assert.AreEqual(flowValueType.Identifier, "testIdentifier");
+            Assert.AreEqual("Path", flowValueType.Type);
+            Assert.AreEqual(2, flowValueType.Data.Count);
+            Assert.AreEqual("testDomain", flowValueType.Domain);
+            Assert.AreEqual("testIdentifier", flowValueType.Identifier);
         }
 
         [TestMethod]

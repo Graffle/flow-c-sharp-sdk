@@ -12,16 +12,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Bool"",""value"":true}";
             var flowValueType = BoolType.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Bool");
-            Assert.AreEqual(flowValueType.Data, true);
+            Assert.AreEqual("Bool", flowValueType.Type);
+            Assert.AreEqual(true, flowValueType.Data);
         }
 
         [TestMethod]
         public void Given_BoolType_Value_Create_StringType()
         {
             var flowValueType = new BoolType(true);
-            Assert.AreEqual(flowValueType.Type, "Bool");
-            Assert.AreEqual(flowValueType.Data, true);
+            Assert.AreEqual("Bool", flowValueType.Type);
+            Assert.AreEqual(true, flowValueType.Data);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var flowValueType = new BoolType(true);
             var cadenceValue = flowValueType.AsJsonCadenceDataFormat();
             var cadenceExpected = @"{""type"":""Bool"",""value"":true}";
-            Assert.AreEqual(cadenceExpected,cadenceValue);
+            Assert.AreEqual(cadenceExpected, cadenceValue);
         }
     }
 }

@@ -12,16 +12,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""UInt64"",""value"":""100""}";
             var flowValueType = UInt64Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "UInt64");
-            Assert.AreEqual(flowValueType.Data, (UInt64)100);
+            Assert.AreEqual("UInt64", flowValueType.Type);
+            Assert.AreEqual((UInt64)100, flowValueType.Data);
         }
 
         [TestMethod]
         public void Given_Value_Create_UInt32Type()
         {
             var flowValueType = new UInt64Type(100);
-            Assert.AreEqual(flowValueType.Type, "UInt64");
-            Assert.AreEqual(flowValueType.Data, (UInt64)100);
+            Assert.AreEqual("UInt64", flowValueType.Type);
+            Assert.AreEqual((UInt64)100, flowValueType.Data);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var flowValueType = new UInt64Type(100);
             var cadenceValue = flowValueType.AsJsonCadenceDataFormat();
             var cadenceExpected = @"{""type"":""UInt64"",""value"":""100""}";
-            Assert.AreEqual(cadenceExpected,cadenceValue);
+            Assert.AreEqual(cadenceExpected, cadenceValue);
         }
     }
 }

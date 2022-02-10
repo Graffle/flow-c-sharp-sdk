@@ -12,16 +12,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Address"",""value"":""0x66d6f450e25a4e22""}";
             var flowValueType = AddressType.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Address");
-            Assert.AreEqual(flowValueType.Data, "0x66d6f450e25a4e22");
+            Assert.AreEqual("Address", flowValueType.Type);
+            Assert.AreEqual("0x66d6f450e25a4e22", flowValueType.Data);
         }
 
         [TestMethod]
         public void Given_Address_Value_Create_StringType()
         {
             var flowValueType = new AddressType("0x66d6f450e25a4e22");
-            Assert.AreEqual(flowValueType.Type, "Address");
-            Assert.AreEqual(flowValueType.Data, "0x66d6f450e25a4e22");
+            Assert.AreEqual("Address", flowValueType.Type);
+            Assert.AreEqual("0x66d6f450e25a4e22", flowValueType.Data);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var flowValueType = new AddressType("0x66d6f450e25a4e22");
             var cadenceValue = flowValueType.AsJsonCadenceDataFormat();
             var cadenceExpected = @"{""type"":""Address"",""value"":""0x66d6f450e25a4e22""}";
-            Assert.AreEqual(cadenceExpected,cadenceValue);
+            Assert.AreEqual(cadenceExpected, cadenceValue);
         }
     }
 }

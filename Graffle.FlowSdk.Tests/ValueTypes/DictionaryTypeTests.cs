@@ -17,8 +17,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual(flowValueType.Type, "Dictionary");
             var found = flowValueType.TryGetValueType(key, out var item);
             var expected = new StringType("test");
-            Assert.AreEqual(((StringType)item).Data, expected.Data);
-            Assert.AreEqual(((StringType)item).Type, expected.Type);
+            Assert.AreEqual(expected.Data, ((StringType)item).Data);
+            Assert.AreEqual(expected.Type, ((StringType)item).Type);
             Assert.IsTrue(found);
         }
 
@@ -31,7 +31,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             test.Add(new UInt16Type(45345), new StringType("TESDTDSAF DSDFDAF FASF"));
             var dict = new DictionaryType(test);
             var found = dict.TryGetValueType(new UInt16Type(45345), out var item);
-            Assert.AreEqual(dict.Data.Count, 3);
+            Assert.AreEqual(3, dict.Data.Count);
             Assert.IsTrue(found);
         }
 
@@ -49,7 +49,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.IsTrue(found);
 
             var convertedBack = flowValueType.AsJsonCadenceDataFormat();
-            Assert.AreEqual(cadenceJsonString,convertedBack);
+            Assert.AreEqual(cadenceJsonString, convertedBack);
         }
     }
 }

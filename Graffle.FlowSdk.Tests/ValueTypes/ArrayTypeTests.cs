@@ -1,7 +1,5 @@
-using System;
 using Graffle.FlowSdk.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
