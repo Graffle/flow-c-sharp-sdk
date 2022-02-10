@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -152,19 +153,5 @@ namespace Graffle.FlowSdk.Types
                 throw new ArgumentException($"Flow Value Type of {type} ({typeToResolve}) does not exist.", nameof(type));
             }
         }
-    }
-
-    public abstract class FlowValueType<T> : FlowValueType
-    {
-        protected FlowValueType(T data)
-        {
-            Data = data;
-        }
-
-        [JsonPropertyName("data")]
-        public virtual T Data { get; }
-
-        public override string DataAsJson()
-            => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
     }
 }
