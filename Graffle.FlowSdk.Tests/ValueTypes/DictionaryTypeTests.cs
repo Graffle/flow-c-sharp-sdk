@@ -51,5 +51,39 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var convertedBack = flowValueType.AsJsonCadenceDataFormat();
             Assert.AreEqual(cadenceJsonString, convertedBack);
         }
+
+        [TestMethod]
+        public void TryGetValueType_KeyNotFound_ReturnsFalse()
+        {
+            var intType = new Int16Type(123);
+            var stringType = new StringType("hello");
+
+            var dict = new Dictionary<FlowValueType, FlowValueType>()
+            {
+                { intType, stringType }
+            };
+
+            var dictType = new DictionaryType(dict);
+
+            //test method
+            var key = new Int16Type(1234);
+            var result = dictType.TryGetValueType(key, out var value);
+
+            Assert.IsFalse(result);
+            Assert.IsNull(value);
+        }
+
+        [TestMethod]
+        public void TryGetValueType_EmptyDictionary_ReturnsFalse()
+        {
+            var dict = new Dictionary<FlowValueType, FlowValueType>();
+
+            var dictType = new DictionaryType(dict);
+            var key = new Int16Type(123);
+
+            var result = dictType.TryGetValueType(key, out var value);
+            Assert.IsFalse(result);
+            Assert.IsNull(value);
+        }
     }
 }

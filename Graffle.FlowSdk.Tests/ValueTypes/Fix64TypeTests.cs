@@ -25,6 +25,14 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_StringValue_Create_Fix64Type()
+        {
+            var flowValueType = new Fix64Type("100");
+            Assert.AreEqual("Fix64", flowValueType.Type);
+            Assert.AreEqual(100m, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_Fix64_Convert_To_Cadence_Json()
         {
             var flowValueType = new Fix64Type(100m);
