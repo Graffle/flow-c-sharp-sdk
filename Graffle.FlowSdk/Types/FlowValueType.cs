@@ -129,6 +129,13 @@ namespace Graffle.FlowSdk.Types
             {
                 return new OptionalType(Create(splitValues.Last(), value));
             }
+            else if (typeToResolve == Constants.PATH_TYPE_NAME || typeToResolve == Constants.CAPABILITY_TYPE_NAME)
+            {
+                //the value node for these types is json with additional child elements
+                //use the typed class to parse it
+                var func = typeNameToJson[typeToResolve];
+                return func(value);
+            }
 
             if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))
             {

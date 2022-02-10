@@ -36,10 +36,17 @@ namespace Graffle.FlowSdk.Types
         public static CapabilityType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
-            var attempt = parsedJson.RootElement.GetProperty("value");
-            var path = attempt.GetProperty(PATH_NAME).ToString();
-            var address = attempt.GetProperty(ADDRESS_NAME).ToString();
-            var borrow = attempt.GetProperty(BORROW_NAME).ToString();
+
+            if (!parsedJson.RootElement.TryGetProperty("value", out var jsonElement))
+            {
+                //this function might be called with just the inner json for the value node
+                //just read directly from root
+                jsonElement = parsedJson.RootElement;
+            }
+
+            var path = jsonElement.GetProperty(PATH_NAME).ToString();
+            var address = jsonElement.GetProperty(ADDRESS_NAME).ToString();
+            var borrow = jsonElement.GetProperty(BORROW_NAME).ToString();
 
             var result = new CapabilityType(path, address, borrow);
             return result;

@@ -31,9 +31,16 @@ namespace Graffle.FlowSdk.Types
         public static PathType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
-            var attempt = parsedJson.RootElement.GetProperty("value");
-            var domain = attempt.GetProperty(DOMAIN_NAME).ToString();
-            var identifier = attempt.GetProperty(IDENTIFIER_NAME).ToString();
+
+            if (!parsedJson.RootElement.TryGetProperty("value", out var jsonElement))
+            {
+                //this function might be called with just the inner json for the value node
+                //just read directly from root
+                jsonElement = parsedJson.RootElement;
+            }
+
+            var domain = jsonElement.GetProperty(DOMAIN_NAME).ToString();
+            var identifier = jsonElement.GetProperty(IDENTIFIER_NAME).ToString();
 
             var result = new PathType(domain, identifier);
             return result;
