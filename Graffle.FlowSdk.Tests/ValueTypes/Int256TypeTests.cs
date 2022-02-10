@@ -40,7 +40,6 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual(expected, flowValueType.Data);
         }
 
-
         [TestMethod]
         public void Given_Int256Type_Convert_To_Cadence_Json()
         {
