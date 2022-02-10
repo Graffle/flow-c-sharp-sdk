@@ -446,5 +446,36 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var resultData = (result as FlowType).Data;
             Assert.AreEqual(expectedData, resultData);
         }
+
+        [TestMethod]
+        public void Create_PathType_ReturnsPathType()
+        {
+            var valueJson = @"{""domain"": ""storage"",""identifier"": ""flowTokenVault""}";
+
+            var result = FlowValueType.Create("Path", valueJson);
+
+            Assert.IsInstanceOfType(result, typeof(PathType));
+
+            var path = result as PathType;
+
+            Assert.AreEqual("storage", path.Domain);
+            Assert.AreEqual("flowTokenVault", path.Identifier);
+        }
+
+        [TestMethod]
+        public void Create_CapabilityType_ReturnsCapabilityType()
+        {
+            var valueJson = @"{""path"": ""/public/someInteger"",""address"": ""0x1"",""borrowType"": ""Int""}";
+
+            var result = FlowValueType.Create("Capability", valueJson);
+
+            Assert.IsInstanceOfType(result, typeof(CapabilityType));
+
+            var cap = result as CapabilityType;
+
+            Assert.AreEqual("/public/someInteger", cap.Path);
+            Assert.AreEqual("0x1", cap.Address);
+            Assert.AreEqual("Int", cap.BorrowType);
+        }
     }
 }

@@ -8,9 +8,10 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
     public class CapabilityTypeTests
     {
         [TestMethod]
-        public void Given_Valid_Cadence_Json_Create_ValueType()
+        [DataRow(@"{""type"":""Capability"",""value"":{""path"":""/public/someInteger"",""address"":""0x1"",""borrowType"":""Int""}}")]
+        [DataRow(@"{""path"": ""/public/someInteger"",""address"": ""0x1"",""borrowType"": ""Int""}")]
+        public void Given_Valid_Cadence_Json_Create_ValueType(string cadenceJsonString)
         {
-            var cadenceJsonString = @"{""type"":""Capability"",""value"":{""path"":""/public/someInteger"",""address"":""0x1"",""borrowType"":""Int""}}";
             var flowValueType = CapabilityType.FromJson(cadenceJsonString);
             Assert.AreEqual("Capability", flowValueType.Type);
             Assert.AreEqual(3, flowValueType.Data.Count);

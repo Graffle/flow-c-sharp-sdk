@@ -8,9 +8,10 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
     public class PathTypeTests
     {
         [TestMethod]
-        public void Given_Valid_Cadence_Json_Create_ValueType()
+        [DataRow(@"{""type"":""Path"",""value"":{""domain"":""testDomain"",""identifier"":""testIdentifier""}}")]
+        [DataRow(@"{""domain"": ""testDomain"",""identifier"": ""testIdentifier""}")]
+        public void Given_Valid_Cadence_Json_Create_ValueType(string cadenceJsonString)
         {
-            var cadenceJsonString = @"{""type"":""Path"",""value"":{""domain"":""testDomain"",""identifier"":""testIdentifier""}}";
             var flowValueType = PathType.FromJson(cadenceJsonString);
             Assert.AreEqual("Path", flowValueType.Type);
             Assert.AreEqual(2, flowValueType.Data.Count);
