@@ -4,44 +4,50 @@ using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types
 {
-    public class PathType : FlowValueType
+    public class CapabilityType : FlowValueType
     {
-        private const string DOMAIN_NAME = "domain";
-        private const string IDENTIFIER_NAME = "identifier";
+        private const string PATH_NAME = "path";
+        private const string ADDRESS_NAME = "address";
+        private const string BORROW_NAME = "borrowType";
 
-        public PathType(string domain, string identifier)
+        public CapabilityType(string path, string address, string borrowType)
         {
             Data = new Dictionary<string, string>();
-            Data.Add(DOMAIN_NAME, domain);
-            Data.Add(IDENTIFIER_NAME, identifier);
+            Data.Add(PATH_NAME, path);
+            Data.Add(ADDRESS_NAME, address);
+            Data.Add(BORROW_NAME, borrowType);
         }
 
-        [JsonPropertyName("domain")]
-        public string Domain => Data[DOMAIN_NAME];
+        [JsonPropertyName("path")]
+        public string Path => Data[PATH_NAME];
 
-        [JsonPropertyName("identifier")]
-        public string Identifier => Data[IDENTIFIER_NAME];
+        [JsonPropertyName("address")]
+        public string Address => Data[ADDRESS_NAME];
+
+        [JsonPropertyName("borrowType")]
+        public string BorrowType => Data[BORROW_NAME];
 
         [JsonPropertyName("type")]
-        public override string Type => Constants.PATH_TYPE_NAME;
+        public override string Type => Constants.CAPABILITY_TYPE_NAME;
 
         [JsonPropertyName("data")]
         public Dictionary<string, string> Data { get; set; }
 
-        public static PathType FromJson(string json)
+        public static CapabilityType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
             var attempt = parsedJson.RootElement.GetProperty("value");
-            var domain = attempt.GetProperty(DOMAIN_NAME).ToString();
-            var identifier = attempt.GetProperty(IDENTIFIER_NAME).ToString();
+            var path = attempt.GetProperty(PATH_NAME).ToString();
+            var address = attempt.GetProperty(ADDRESS_NAME).ToString();
+            var borrow = attempt.GetProperty(BORROW_NAME).ToString();
 
-            var result = new PathType(domain, identifier);
+            var result = new CapabilityType(path, address, borrow);
             return result;
         }
 
         public override string AsJsonCadenceDataFormat()
         {
-            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"domain\":\"{Domain}\",\"identifier\":\"{Identifier}\"}}}}";
+            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"path\":\"{Path}\",\"address\":\"{Address}\",\"borrowType\":\"{BorrowType}\"}}}}";
             return result;
         }
 
