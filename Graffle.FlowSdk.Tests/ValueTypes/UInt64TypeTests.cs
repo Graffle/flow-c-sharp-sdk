@@ -17,11 +17,23 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
-        public void Given_Value_Create_UInt32Type()
+        public void Given_UInt64_Value_Create_UInt64Type()
         {
-            var flowValueType = new UInt64Type(100);
+            ulong expected = 100;
+
+            var flowValueType = new UInt64Type(expected);
             Assert.AreEqual("UInt64", flowValueType.Type);
-            Assert.AreEqual((UInt64)100, flowValueType.Data);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
+        public void Given_String_Value_Create_UInt64Type()
+        {
+            ulong expected = 100;
+
+            var flowValueType = new UInt64Type(expected.ToString());
+            Assert.AreEqual("UInt64", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
         }
 
         [TestMethod]

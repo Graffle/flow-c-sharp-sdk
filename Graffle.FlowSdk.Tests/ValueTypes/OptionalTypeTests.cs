@@ -147,5 +147,29 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var cadenceExpected = $"{{\"type\":\"Optional\",\"value\":{{\"type\":\"Bool\",\"value\":false}}}}";
             Assert.AreEqual(cadenceExpected, cadence);
         }
+
+        [TestMethod]
+        public void Given_ValidCadenceJson_CreatesOptionalType()
+        {
+            var cadenceJson = $"{{\"type\":\"Optional\",\"value\":{{\"type\":\"Int16\",\"value\":123}}}}";
+
+            var result = OptionalType.FromJson(cadenceJson);
+
+            Assert.IsInstanceOfType(result.Data, typeof(Int16Type));
+
+            var data = result.Data as Int16Type;
+
+            Assert.AreEqual(123, data.Data);
+        }
+
+        [TestMethod]
+        public void Given_NilJson_CreatesOptionalType()
+        {
+            var cadenceJson = "{\"type\":\"Optional\",\"value\":null}";
+
+            var result = OptionalType.FromJson(cadenceJson);
+
+            Assert.IsNull(result.Data);
+        }
     }
 }

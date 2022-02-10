@@ -27,6 +27,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_IntType()
+        {
+            int expected = 12345;
+
+            var flowValueType = new IntType(expected.ToString());
+            Assert.AreEqual("Int", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_IntType_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""Int"",""value"":""0""}";

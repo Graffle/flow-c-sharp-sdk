@@ -27,6 +27,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_UInt16Type()
+        {
+            uint expected = 0;
+
+            var flowValueType = new UInt16Type(expected.ToString());
+            Assert.AreEqual("UInt16", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_UInt16Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""UInt16"",""value"":""0""}";

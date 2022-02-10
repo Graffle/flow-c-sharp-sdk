@@ -27,6 +27,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_Int8Type()
+        {
+            int expected = 0;
+
+            var flowValueType = new Int8Type(expected.ToString());
+            Assert.AreEqual("Int8", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_Int8Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""Int8"",""value"":""0""}";

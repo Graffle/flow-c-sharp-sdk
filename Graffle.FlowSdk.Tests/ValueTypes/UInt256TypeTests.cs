@@ -31,6 +31,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_UInt256Type()
+        {
+            var expected = BIGINT;
+
+            var flowValueType = new UInt256Type(expected.ToString());
+            Assert.AreEqual("UInt256", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_UInt256Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""UInt256"",""value"":""91389681247993671255432112000000000""}";
