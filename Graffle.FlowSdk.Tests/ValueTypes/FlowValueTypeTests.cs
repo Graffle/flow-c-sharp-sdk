@@ -477,5 +477,42 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual("0x1", cap.Address);
             Assert.AreEqual("Int", cap.BorrowType);
         }
+
+        [TestMethod]
+        [DataRow("Address", true)]
+        [DataRow("String", true)]
+        [DataRow("Bool", true)]
+        [DataRow("UInt", true)]
+        [DataRow("UInt8", true)]
+        [DataRow("UInt16", true)]
+        [DataRow("UInt32", true)]
+        [DataRow("UInt64", true)]
+        [DataRow("UInt128", true)]
+        [DataRow("UInt256", true)]
+        [DataRow("Int", true)]
+        [DataRow("Int8", true)]
+        [DataRow("Int16", true)]
+        [DataRow("Int32", true)]
+        [DataRow("Int64", true)]
+        [DataRow("Int128", true)]
+        [DataRow("Int256", true)]
+        [DataRow("UFix64", true)]
+        [DataRow("Fix64", true)]
+        [DataRow("Word8", true)]
+        [DataRow("Word16", true)]
+        [DataRow("Word32", true)]
+        [DataRow("Word64", true)]
+        [DataRow("Optional", false)] //complex types
+        [DataRow("Path", false)]
+        [DataRow("Capability", false)]
+        [DataRow("Dictionary", false)]
+        [DataRow("Array", false)]
+        [DataRow("Type", false)]
+        public void IsPrimitiveType_Test(string type, bool expectedValue)
+        {
+            bool res = FlowValueType.IsPrimitiveType(type);
+
+            Assert.AreEqual(expectedValue, res);
+        }
     }
 }

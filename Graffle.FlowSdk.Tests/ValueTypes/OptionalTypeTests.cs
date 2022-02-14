@@ -171,5 +171,23 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.IsNull(result.Data);
         }
+
+        [TestMethod]
+        public void FromJson_WithNestedType_CreatesOptionalType()
+        {
+            var json = @"{""type"":""Optional"",""value"":{""type"":""Type"",""value"":{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}}}";
+
+            var result = OptionalType.FromJson(json);
+
+            Assert.IsInstanceOfType(result, typeof(OptionalType));
+
+            var opt = result as OptionalType;
+
+            Assert.IsInstanceOfType(opt.Data, typeof(FlowType));
+
+            var type = opt.Data as FlowType;
+
+            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", type.Data);
+        }
     }
 }

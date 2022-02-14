@@ -28,7 +28,19 @@ namespace Graffle.FlowSdk.Types
             {
                 var type = attempt.GetProperty("type").ToString() ?? null;
                 var value = attempt.GetProperty("value").ToString();
-                var jsonObject = $"{{\"type\":\"{type}\",\"value\":\"{value}\"}}";
+
+                string jsonObject;
+                if (FlowValueType.IsPrimitiveType(type))
+                {
+                    jsonObject = $"{{\"type\":\"{type}\",\"value\":\"{value}\"}}";
+                }
+                else
+                {
+                    //we're dealing with a complex type here and value is going to be a json string
+                    //ie do not wrap value in quotes
+                    jsonObject = $"{{\"type\":\"{type}\",\"value\":{value}}}";
+                }
+
                 var result = new OptionalType(FlowValueType.CreateFromCadence(type, jsonObject));
                 return result;
             }

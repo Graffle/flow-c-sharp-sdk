@@ -15,6 +15,7 @@ namespace Graffle.FlowSdk.Types
         private delegate FlowValueType FlowValueTypeConstructor(dynamic value);
         private static readonly Dictionary<string, FromCadenceJson> typeNameToJson;
         private static readonly Dictionary<string, FlowValueTypeConstructor> typeNameToCtor;
+        private static readonly HashSet<string> primitiveTypes;
 
         static FlowValueType()
         {
@@ -79,6 +80,33 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD16_TYPE_NAME, (arg) => new Word16Type(arg) },
                 { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
+            };
+
+            primitiveTypes = new HashSet<string>()
+            {
+                Constants.ADDRESS_TYPE_NAME,
+                Constants.STRING_TYPE_NAME,
+                Constants.UINT_TYPE_NAME,
+                Constants.UINT8_TYPE_NAME,
+                Constants.UINT16_TYPE_NAME,
+                Constants.UINT32_TYPE_NAME,
+                Constants.UINT64_TYPE_NAME,
+                Constants.UINT128_TYPE_NAME,
+                Constants.UINT256_TYPE_NAME,
+                Constants.INT_TYPE_NAME,
+                Constants.INT8_TYPE_NAME,
+                Constants.INT16_TYPE_NAME,
+                Constants.INT32_TYPE_NAME,
+                Constants.INT64_TYPE_NAME,
+                Constants.INT128_TYPE_NAME,
+                Constants.INT256_TYPE_NAME,
+                Constants.FIX64_TYPE_NAME,
+                Constants.UFIX64_TYPE_NAME,
+                Constants.BOOL_TYPE_NAME,
+                Constants.WORD8_TYPE_NAME,
+                Constants.WORD16_TYPE_NAME,
+                Constants.WORD32_TYPE_NAME,
+                Constants.WORD64_TYPE_NAME,
             };
         }
 
@@ -153,5 +181,7 @@ namespace Graffle.FlowSdk.Types
                 throw new ArgumentException($"Flow Value Type of {type} ({typeToResolve}) does not exist.", nameof(type));
             }
         }
+
+        public static bool IsPrimitiveType(string type) => primitiveTypes.Contains(type);
     }
 }
