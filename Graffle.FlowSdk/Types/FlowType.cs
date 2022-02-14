@@ -12,8 +12,15 @@ namespace Graffle.FlowSdk.Types
         public static FlowType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
-            var value = parsedJson.RootElement.GetProperty("value");
-            var staticType = value.GetProperty("staticType").ToString();
+
+            if (!parsedJson.RootElement.TryGetProperty("value", out var jsonElement))
+            {
+                //this function might be called with just the inner json for the value node
+                //just read directly from root
+                jsonElement = parsedJson.RootElement;
+            }
+
+            var staticType = jsonElement.GetProperty("staticType").ToString();
             var result = new FlowType(staticType);
             return result;
         }

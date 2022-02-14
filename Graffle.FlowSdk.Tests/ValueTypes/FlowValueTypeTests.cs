@@ -437,14 +437,14 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void Create_FlowType_ReturnsFlowType()
         {
-            var expectedData = "hello";
+            var expectedData = @"{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}";
 
             var result = FlowValueType.Create("Type", expectedData);
 
             Assert.IsInstanceOfType(result, typeof(FlowType));
 
             var resultData = (result as FlowType).Data;
-            Assert.AreEqual(expectedData, resultData);
+            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", resultData);
         }
 
         [TestMethod]
