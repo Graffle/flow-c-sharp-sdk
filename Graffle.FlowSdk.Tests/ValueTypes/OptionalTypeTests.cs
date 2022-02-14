@@ -147,5 +147,47 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var cadenceExpected = $"{{\"type\":\"Optional\",\"value\":{{\"type\":\"Bool\",\"value\":false}}}}";
             Assert.AreEqual(cadenceExpected, cadence);
         }
+
+        [TestMethod]
+        public void Given_ValidCadenceJson_CreatesOptionalType()
+        {
+            var cadenceJson = $"{{\"type\":\"Optional\",\"value\":{{\"type\":\"Int16\",\"value\":123}}}}";
+
+            var result = OptionalType.FromJson(cadenceJson);
+
+            Assert.IsInstanceOfType(result.Data, typeof(Int16Type));
+
+            var data = result.Data as Int16Type;
+
+            Assert.AreEqual(123, data.Data);
+        }
+
+        [TestMethod]
+        public void Given_NilJson_CreatesOptionalType()
+        {
+            var cadenceJson = "{\"type\":\"Optional\",\"value\":null}";
+
+            var result = OptionalType.FromJson(cadenceJson);
+
+            Assert.IsNull(result.Data);
+        }
+
+        [TestMethod]
+        public void FromJson_WithNestedType_CreatesOptionalType()
+        {
+            var json = @"{""type"":""Optional"",""value"":{""type"":""Type"",""value"":{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}}}";
+
+            var result = OptionalType.FromJson(json);
+
+            Assert.IsInstanceOfType(result, typeof(OptionalType));
+
+            var opt = result as OptionalType;
+
+            Assert.IsInstanceOfType(opt.Data, typeof(FlowType));
+
+            var type = opt.Data as FlowType;
+
+            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", type.Data);
+        }
     }
 }

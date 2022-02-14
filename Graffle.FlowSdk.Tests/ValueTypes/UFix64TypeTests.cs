@@ -12,16 +12,27 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""UFix64"",""value"":""100""}";
             var flowValueType = UFix64Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "UFix64");
-            Assert.AreEqual(flowValueType.Data, 100m);
+            Assert.AreEqual("UFix64", flowValueType.Type);
+            Assert.AreEqual(100m, flowValueType.Data);
         }
 
         [TestMethod]
-        public void Given_Value_Create_UFix64Type()
+        public void Given_Decimal_Value_Create_UFix64Type()
         {
-            var flowValueType = new UFix64Type(100m);
-            Assert.AreEqual(flowValueType.Type, "UFix64");
-            Assert.AreEqual(flowValueType.Data, 100m);
+            var expected = 100m;
+            var flowValueType = new UFix64Type(expected);
+            Assert.AreEqual("UFix64", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
+        public void Given_String_Value_Create_UFix64Type()
+        {
+            var expected = 100m;
+            var flowValueType = new UFix64Type(expected.ToString());
+
+            Assert.AreEqual("UFix64", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
         }
 
         [TestMethod]
@@ -30,7 +41,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var flowValueType = new UFix64Type(100m);
             var cadenceValue = flowValueType.AsJsonCadenceDataFormat();
             var cadenceExpected = @"{""type"":""UFix64"",""value"":""100""}";
-            Assert.AreEqual(cadenceExpected,cadenceValue);
+            Assert.AreEqual(cadenceExpected, cadenceValue);
         }
     }
 }

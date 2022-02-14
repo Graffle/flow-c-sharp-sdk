@@ -12,8 +12,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         {
             var cadenceJsonString = @"{""type"":""Word64"",""value"":""100""}";
             var flowValueType = Word64Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Word64");
-            Assert.AreEqual(flowValueType.Data, (UInt64)100);
+            Assert.AreEqual("Word64", flowValueType.Type);
+            Assert.AreEqual((UInt64)100, flowValueType.Data);
         }
 
         [TestMethod]
@@ -22,8 +22,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             UInt64 value = 18446744073709551615;
             var cadenceJsonString = $"{{\"type\":\"Word64\",\"value\":\"{value}\"}}";
             var flowValueType = Word64Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Word64");
-            Assert.AreEqual(flowValueType.Data, value);
+            Assert.AreEqual("Word64", flowValueType.Type);
+            Assert.AreEqual(value, flowValueType.Data);
         }
 
         [TestMethod]
@@ -32,8 +32,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             UInt64 value = 0;
             var cadenceJsonString = $"{{\"type\":\"Word64\",\"value\":\"{value}\"}}";
             var flowValueType = Word64Type.FromJson(cadenceJsonString);
-            Assert.AreEqual(flowValueType.Type, "Word64");
-            Assert.AreEqual(flowValueType.Data, value);
+            Assert.AreEqual("Word64", flowValueType.Type);
+            Assert.AreEqual(value, flowValueType.Data);
         }
 
         [TestMethod]

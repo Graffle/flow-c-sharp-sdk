@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -10,46 +11,104 @@ namespace Graffle.FlowSdk.Types
 {
     public abstract class FlowValueType
     {
-        protected const string ADDRESS_TYPE_NAME = "Address";
+        private delegate FlowValueType FromCadenceJson(string json);
+        private delegate FlowValueType FlowValueTypeConstructor(dynamic value);
+        private static readonly Dictionary<string, FromCadenceJson> typeNameToJson;
+        private static readonly Dictionary<string, FlowValueTypeConstructor> typeNameToCtor;
+        private static readonly HashSet<string> primitiveTypes;
 
-        protected const string OPTIONAL_TYPE_NAME = "Optional";
+        static FlowValueType()
+        {
+            typeNameToJson = new Dictionary<string, FromCadenceJson>()
+            {
+                { Constants.ADDRESS_TYPE_NAME, AddressType.FromJson },
+                { Constants.OPTIONAL_TYPE_NAME, OptionalType.FromJson },
+                { Constants.STRING_TYPE_NAME, StringType.FromJson },
+                { Constants.UINT_TYPE_NAME, UIntType.FromJson },
+                { Constants.UINT8_TYPE_NAME, UInt8Type.FromJson },
+                { Constants.UINT16_TYPE_NAME, UInt16Type.FromJson },
+                { Constants.UINT32_TYPE_NAME, UInt32Type.FromJson },
+                { Constants.UINT64_TYPE_NAME, UInt64Type.FromJson },
+                { Constants.UINT128_TYPE_NAME, UInt128Type.FromJson },
+                { Constants.UINT256_TYPE_NAME, UInt256Type.FromJson },
+                { Constants.INT_TYPE_NAME, IntType.FromJson },
+                { Constants.INT8_TYPE_NAME, Int8Type.FromJson },
+                { Constants.INT16_TYPE_NAME, Int16Type.FromJson },
+                { Constants.INT32_TYPE_NAME, Int32Type.FromJson },
+                { Constants.INT64_TYPE_NAME, Int64Type.FromJson },
+                { Constants.INT128_TYPE_NAME, Int128Type.FromJson },
+                { Constants.INT256_TYPE_NAME, Int256Type.FromJson },
+                { Constants.FIX64_TYPE_NAME, Fix64Type.FromJson },
+                { Constants.UFIX64_TYPE_NAME, UFix64Type.FromJson },
+                { Constants.DICTIONARY_TYPE_NAME, DictionaryType.FromJson },
+                { Constants.ARRAY_TYPE_NAME, ArrayType.FromJson },
+                { Constants.BOOL_TYPE_NAME, BoolType.FromJson },
+                { Constants.FLOW_TYPE_NAME, FlowType.FromJson },
+                { Constants.WORD8_TYPE_NAME, Word8Type.FromJson },
+                { Constants.WORD16_TYPE_NAME, Word16Type.FromJson },
+                { Constants.WORD32_TYPE_NAME, Word32Type.FromJson },
+                { Constants.WORD64_TYPE_NAME, Word64Type.FromJson },
+                { Constants.PATH_TYPE_NAME, PathType.FromJson },
+                { Constants.CAPABILITY_TYPE_NAME, CapabilityType.FromJson },
+            };
 
-        protected const string PATH_TYPE_NAME = "Path";
-        protected const string CAPABILITY_TYPE_NAME = "Capability";
+            typeNameToCtor = new Dictionary<string, FlowValueTypeConstructor>()
+            {
+                { Constants.ADDRESS_TYPE_NAME, (arg) => new AddressType(arg)},
+                { Constants.STRING_TYPE_NAME, (arg) => new StringType(arg) },
+                { Constants.UINT_TYPE_NAME, (arg) => new UIntType(arg) },
+                { Constants.UINT8_TYPE_NAME, (arg) => new UInt8Type(arg) },
+                { Constants.UINT16_TYPE_NAME, (arg) => new UInt16Type(arg) },
+                { Constants.UINT32_TYPE_NAME, (arg) => new UInt32Type(arg) },
+                { Constants.UINT64_TYPE_NAME, (arg) => new UInt64Type(arg) },
+                { Constants.UINT128_TYPE_NAME, (arg) => new UInt128Type(arg) },
+                { Constants.UINT256_TYPE_NAME, (arg) => new UInt256Type(arg) },
+                { Constants.INT_TYPE_NAME, (arg) => new IntType(arg) },
+                { Constants.INT8_TYPE_NAME, (arg) => new Int8Type(arg) },
+                { Constants.INT16_TYPE_NAME, (arg) => new Int16Type(arg) },
+                { Constants.INT32_TYPE_NAME, (arg) => new Int32Type(arg) },
+                { Constants.INT64_TYPE_NAME, (arg) => new Int64Type(arg) },
+                { Constants.INT128_TYPE_NAME, (arg) => new Int128Type(arg) },
+                { Constants.INT256_TYPE_NAME, (arg) => new Int256Type(arg) },
+                { Constants.FIX64_TYPE_NAME, (arg) => new Fix64Type(arg) },
+                { Constants.UFIX64_TYPE_NAME, (arg) => new UFix64Type(arg) },
+                { Constants.DICTIONARY_TYPE_NAME, (arg) => new DictionaryType(arg) },
+                { Constants.ARRAY_TYPE_NAME, (arg) => arg is string ? ArrayType.CreateFromCadence(Constants.ARRAY_TYPE_NAME, arg) : new ArrayType(arg) },
+                { Constants.BOOL_TYPE_NAME, (arg) => new BoolType(arg) },
+                { Constants.FLOW_TYPE_NAME, (arg) => new FlowType(arg) },
+                { Constants.WORD8_TYPE_NAME, (arg) => new Word8Type(arg) },
+                { Constants.WORD16_TYPE_NAME, (arg) => new Word16Type(arg) },
+                { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },
+                { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
+            };
 
-        protected const string STRING_TYPE_NAME = "String";
-
-        protected const string BOOL_TYPE_NAME = "Bool";
-
-        protected const string UINT_TYPE_NAME = "UInt";
-        protected const string UINT8_TYPE_NAME = "UInt8";
-        protected const string UINT16_TYPE_NAME = "UInt16";
-        protected const string UINT32_TYPE_NAME = "UInt32";
-        protected const string UINT64_TYPE_NAME = "UInt64";
-        protected const string UINT128_TYPE_NAME = "UInt128";
-        protected const string UINT256_TYPE_NAME = "UInt256";
-
-        protected const string INT_TYPE_NAME = "Int";
-        protected const string INT8_TYPE_NAME = "Int8";
-        protected const string INT16_TYPE_NAME = "Int16";
-        protected const string INT32_TYPE_NAME = "Int32";
-        protected const string INT64_TYPE_NAME = "Int64";
-        protected const string INT128_TYPE_NAME = "Int128";
-        protected const string INT256_TYPE_NAME = "Int256";
-
-        protected const string UFIX64_TYPE_NAME = "UFix64";
-        protected const string FIX64_TYPE_NAME = "Fix64";
-
-        protected const string DICTIONARY_TYPE_NAME = "Dictionary";
-        protected const string ARRAY_TYPE_NAME = "Array";
-
-        protected const string FLOW_TYPE_NAME = "Type";
-
-        protected const string WORD8_TYPE_NAME = "Word8";
-        protected const string WORD16_TYPE_NAME = "Word16";
-        protected const string WORD32_TYPE_NAME = "Word32";
-        protected const string WORD64_TYPE_NAME = "Word64";
-
+            primitiveTypes = new HashSet<string>()
+            {
+                Constants.ADDRESS_TYPE_NAME,
+                Constants.STRING_TYPE_NAME,
+                Constants.UINT_TYPE_NAME,
+                Constants.UINT8_TYPE_NAME,
+                Constants.UINT16_TYPE_NAME,
+                Constants.UINT32_TYPE_NAME,
+                Constants.UINT64_TYPE_NAME,
+                Constants.UINT128_TYPE_NAME,
+                Constants.UINT256_TYPE_NAME,
+                Constants.INT_TYPE_NAME,
+                Constants.INT8_TYPE_NAME,
+                Constants.INT16_TYPE_NAME,
+                Constants.INT32_TYPE_NAME,
+                Constants.INT64_TYPE_NAME,
+                Constants.INT128_TYPE_NAME,
+                Constants.INT256_TYPE_NAME,
+                Constants.FIX64_TYPE_NAME,
+                Constants.UFIX64_TYPE_NAME,
+                Constants.BOOL_TYPE_NAME,
+                Constants.WORD8_TYPE_NAME,
+                Constants.WORD16_TYPE_NAME,
+                Constants.WORD32_TYPE_NAME,
+                Constants.WORD64_TYPE_NAME,
+            };
+        }
 
         [JsonPropertyName("type")]
         public abstract string Type { get; }
@@ -72,91 +131,59 @@ namespace Graffle.FlowSdk.Types
 
         public static FlowValueType CreateFromCadence(string type, string cadenceJsonValue)
         {
-            return type switch
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type));
+
+            if (typeNameToJson.TryGetValue(type, out var func))
             {
-                ADDRESS_TYPE_NAME => AddressType.FromJson(cadenceJsonValue),
-                OPTIONAL_TYPE_NAME => OptionalType.FromJson(cadenceJsonValue),
-                STRING_TYPE_NAME => StringType.FromJson(cadenceJsonValue),
-                UINT_TYPE_NAME => UIntType.FromJson(cadenceJsonValue),
-                UINT8_TYPE_NAME => UInt8Type.FromJson(cadenceJsonValue),
-                UINT16_TYPE_NAME => UInt16Type.FromJson(cadenceJsonValue),
-                UINT32_TYPE_NAME => UInt32Type.FromJson(cadenceJsonValue),
-                UINT64_TYPE_NAME => UInt64Type.FromJson(cadenceJsonValue),
-                UINT128_TYPE_NAME => UInt128Type.FromJson(cadenceJsonValue),
-                UINT256_TYPE_NAME => UInt256Type.FromJson(cadenceJsonValue),
-                INT_TYPE_NAME => IntType.FromJson(cadenceJsonValue),
-                INT8_TYPE_NAME => Int8Type.FromJson(cadenceJsonValue),
-                INT16_TYPE_NAME => Int16Type.FromJson(cadenceJsonValue),
-                INT32_TYPE_NAME => Int32Type.FromJson(cadenceJsonValue),
-                INT64_TYPE_NAME => Int64Type.FromJson(cadenceJsonValue),
-                INT128_TYPE_NAME => Int128Type.FromJson(cadenceJsonValue),
-                INT256_TYPE_NAME => Int256Type.FromJson(cadenceJsonValue),
-                FIX64_TYPE_NAME => Fix64Type.FromJson(cadenceJsonValue),
-                UFIX64_TYPE_NAME => UFix64Type.FromJson(cadenceJsonValue),
-                DICTIONARY_TYPE_NAME => DictionaryType.FromJson(cadenceJsonValue),
-                ARRAY_TYPE_NAME => ArrayType.FromJson(cadenceJsonValue),
-                BOOL_TYPE_NAME => BoolType.FromJson(cadenceJsonValue),
-                FLOW_TYPE_NAME => FlowType.FromJson(cadenceJsonValue),
-                WORD8_TYPE_NAME => Word8Type.FromJson(cadenceJsonValue),
-                WORD16_TYPE_NAME => Word16Type.FromJson(cadenceJsonValue),
-                WORD32_TYPE_NAME => Word32Type.FromJson(cadenceJsonValue),
-                WORD64_TYPE_NAME => Word64Type.FromJson(cadenceJsonValue),
-                PATH_TYPE_NAME => PathType.FromJson(cadenceJsonValue),
-                CAPABILITY_TYPE_NAME => PathType.FromJson(cadenceJsonValue),
-                _ => throw new ArgumentException($"Flow Value Type of {type} does not exist.")
-            };
+                return func(cadenceJsonValue);
+            }
+            else
+            {
+                throw new ArgumentException($"Flow Value Type of {type} does not exist.", nameof(type));
+            }
         }
 
         public static FlowValueType Create(string type, dynamic value)
         {
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type));
+
             var splitValues = type.Split('|');
-            return splitValues.First() switch
+            string typeToResolve = splitValues.First();
+            if (typeToResolve == Constants.OPTIONAL_TYPE_NAME)
             {
-                ADDRESS_TYPE_NAME => new AddressType(value),
-                OPTIONAL_TYPE_NAME => new OptionalType(FlowValueType.Create(splitValues.Last(), value)),
-                STRING_TYPE_NAME => new StringType(value),
-                UINT_TYPE_NAME => new UIntType(value),
-                UINT8_TYPE_NAME => new UInt8Type(value),
-                UINT16_TYPE_NAME => new UInt16Type(value),
-                UINT32_TYPE_NAME => new UInt32Type(value),
-                UINT64_TYPE_NAME => new UInt64Type(value),
-                UINT128_TYPE_NAME => new UInt128Type(value),
-                UINT256_TYPE_NAME => new UInt256Type(value),
-                INT_TYPE_NAME => new IntType(value),
-                INT8_TYPE_NAME => new Int8Type(value),
-                INT16_TYPE_NAME => new Int16Type(value),
-                INT32_TYPE_NAME => new Int32Type(value),
-                INT64_TYPE_NAME => new Int64Type(value),
-                INT128_TYPE_NAME => new Int128Type(value),
-                INT256_TYPE_NAME => new Int256Type(value),
-                FIX64_TYPE_NAME => new Fix64Type(value),
-                UFIX64_TYPE_NAME => new UFix64Type(value),
-                DICTIONARY_TYPE_NAME => new DictionaryType(value),
-                ARRAY_TYPE_NAME => value is string ? ArrayType.CreateFromCadence(type, value) : new ArrayType(value),
-                BOOL_TYPE_NAME => new BoolType(value),
-                FLOW_TYPE_NAME => new FlowType(value),
-                WORD8_TYPE_NAME => new Word8Type(value),
-                WORD16_TYPE_NAME => new Word16Type(value),
-                WORD32_TYPE_NAME => new Word32Type(value),
-                WORD64_TYPE_NAME => new Word64Type(value),
-                _ => throw new ArgumentException($"Flow Value Type of {type} does not exist.")
-            };
+                return new OptionalType(Create(splitValues.Last(), value));
+            }
+            else if (typeToResolve == Constants.PATH_TYPE_NAME
+                    || typeToResolve == Constants.CAPABILITY_TYPE_NAME
+                    || typeToResolve == Constants.FLOW_TYPE_NAME)
+            {
+                //the value node for these types is json with additional child elements
+                //use the typed class to parse it
+                var func = typeNameToJson[typeToResolve];
+                return func(value);
+            }
+
+            if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))
+            {
+                try
+                {
+                    return ctor(value);
+                }
+                catch (Exception ex)
+                {
+                    //If we're going to fail here it will probably be because value's type doesnt match the FlowType's constructor
+                    //Wrap this exception so it makes more sense
+                    throw new InvalidOperationException($"Failed to create Flow Value of type {type} ({typeToResolve}) with value {value}", ex);
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"Flow Value Type of {type} ({typeToResolve}) does not exist.", nameof(type));
+            }
         }
 
-    }
-
-    public abstract class FlowValueType<T> : FlowValueType
-    {
-
-        protected FlowValueType(T data)
-        {
-            Data = data;
-        }
-
-        [JsonPropertyName("data")]
-        public virtual T Data { get; }
-
-        public override string DataAsJson()
-            => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
+        public static bool IsPrimitiveType(string type) => primitiveTypes.Contains(type);
     }
 }

@@ -22,7 +22,7 @@ namespace Graffle.FlowSdk.Types
 
         [JsonPropertyName("type")]
         public override string Type
-                    => INT128_TYPE_NAME;
+                    => Constants.INT128_TYPE_NAME;
 
         public override string AsJsonCadenceDataFormat()
             => $"{{\"type\":\"{Type}\",\"value\":\"{Data}\"}}";

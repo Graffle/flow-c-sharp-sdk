@@ -18,7 +18,7 @@ namespace Graffle.FlowSdk.Types
 
         [JsonPropertyName("type")]
         public override string Type
-                   => BOOL_TYPE_NAME;
+                   => Constants.BOOL_TYPE_NAME;
 
         public override string AsJsonCadenceDataFormat()
             => System.Text.Json.JsonSerializer.Serialize(new { type = Type, value = Data });

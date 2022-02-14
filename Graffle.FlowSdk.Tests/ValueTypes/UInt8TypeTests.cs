@@ -27,6 +27,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_UInt8Type()
+        {
+            uint expected = 12345;
+
+            var flowValueType = new UInt8Type(expected.ToString());
+            Assert.AreEqual("UInt8", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_UInt8Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""UInt8"",""value"":""0""}";

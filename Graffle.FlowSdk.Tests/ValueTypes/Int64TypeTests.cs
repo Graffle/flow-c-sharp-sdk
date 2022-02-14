@@ -27,6 +27,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_Int64Type()
+        {
+            long expected = long.MaxValue;
+
+            var flowValueType = new Int64Type(expected.ToString());
+            Assert.AreEqual("Int64", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_Int64Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""Int64"",""value"":""0""}";

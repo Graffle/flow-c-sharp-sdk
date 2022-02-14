@@ -1,9 +1,7 @@
-using System;
 using Graffle.FlowSdk.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace Graffle.FlowSdk.Tests.ValueTypes
 {
     [TestClass]
@@ -77,6 +75,32 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             var cadenceJson = flowValueType.AsJsonCadenceDataFormat();
             Assert.AreEqual(expectedCadenceJson, cadenceJson);
+        }
+
+        [TestMethod]
+        public void Values_ReturnsCorrectValues()
+        {
+            var list = new List<FlowValueType>()
+            {
+                new Int16Type(123),
+                new StringType("hello")
+            };
+
+            var arr = new ArrayType(list);
+
+            var values = arr.Values().ToList();
+            Assert.IsNotNull(values);
+            Assert.AreEqual(2, values.Count);
+
+            var first = values[0];
+            Assert.IsInstanceOfType(first, typeof(Int16Type));
+            var intType = first as Int16Type;
+            Assert.AreEqual(123, intType.Data);
+
+            var second = values[1];
+            Assert.IsInstanceOfType(second, typeof(StringType));
+            var stringType = second as StringType;
+            Assert.AreEqual("hello", stringType.Data);
         }
     }
 }

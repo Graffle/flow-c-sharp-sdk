@@ -31,6 +31,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Given_String_Value_Create_Int128Type()
+        {
+            var expected = BIGINT;
+
+            var flowValueType = new Int128Type(expected.ToString());
+            Assert.AreEqual("Int128", flowValueType.Type);
+            Assert.AreEqual(expected, flowValueType.Data);
+        }
+
+        [TestMethod]
         public void Given_Int128Type_Convert_To_Cadence_Json()
         {
             var expectedCadenceJson = @"{""type"":""Int128"",""value"":""91389681247993671255432112000000000""}";
