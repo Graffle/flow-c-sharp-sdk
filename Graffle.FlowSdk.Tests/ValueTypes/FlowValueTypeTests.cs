@@ -437,7 +437,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void Create_FlowType_ReturnsFlowType()
         {
-            var expectedData = @"{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}";
+            var expectedData = "A.ca4ee530dafff8ad.Evolution.NFT";
 
             var result = FlowValueType.Create("Type", expectedData);
 
@@ -450,9 +450,12 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void Create_PathType_ReturnsPathType()
         {
-            var valueJson = @"{""domain"": ""storage"",""identifier"": ""flowTokenVault""}";
-
-            var result = FlowValueType.Create("Path", valueJson);
+            Dictionary<string, string> values = new Dictionary<string, string>()
+            {
+                {"domain", "storage"},
+                {"identifier", "flowTokenVault"}
+            };
+            var result = FlowValueType.Create("Path", values);
 
             Assert.IsInstanceOfType(result, typeof(PathType));
 
@@ -465,9 +468,14 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void Create_CapabilityType_ReturnsCapabilityType()
         {
-            var valueJson = @"{""path"": ""/public/someInteger"",""address"": ""0x1"",""borrowType"": ""Int""}";
+            Dictionary<string, string> values = new Dictionary<string, string>()
+            {
+                {"path", "/public/someInteger"},
+                {"address", "0x1"},
+                {"borrowType", "Int"}
+            };
 
-            var result = FlowValueType.Create("Capability", valueJson);
+            var result = FlowValueType.Create("Capability", values);
 
             Assert.IsInstanceOfType(result, typeof(CapabilityType));
 
@@ -513,20 +521,6 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             bool res = FlowValueType.IsPrimitiveType(type);
 
             Assert.AreEqual(expectedValue, res);
-        }
-
-        [TestMethod]
-        public void Create_Type_ReturnsFlowType()
-        {
-            var json = @"{""type"":""Type"",""value"":{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}}";
-
-            var res = FlowValueType.Create("Type", json);
-
-            Assert.IsInstanceOfType(res, typeof(FlowType));
-
-            var flowtype = res as FlowType;
-
-            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", flowtype.Data);
         }
     }
 }

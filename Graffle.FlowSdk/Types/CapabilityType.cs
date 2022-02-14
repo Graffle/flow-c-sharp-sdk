@@ -10,6 +10,11 @@ namespace Graffle.FlowSdk.Types
         private const string ADDRESS_NAME = "address";
         private const string BORROW_NAME = "borrowType";
 
+
+        public CapabilityType(Dictionary<string, string> values)
+            : this(values[PATH_NAME], values[ADDRESS_NAME], values[BORROW_NAME])
+        { }
+
         public CapabilityType(string path, string address, string borrowType)
         {
             Data = new Dictionary<string, string>();
