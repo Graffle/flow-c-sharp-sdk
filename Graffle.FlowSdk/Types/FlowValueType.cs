@@ -80,6 +80,8 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD16_TYPE_NAME, (arg) => new Word16Type(arg) },
                 { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
+                { Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
+                { Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg) }
             };
 
             primitiveTypes = new HashSet<string>()
@@ -154,15 +156,6 @@ namespace Graffle.FlowSdk.Types
             if (typeToResolve == Constants.OPTIONAL_TYPE_NAME)
             {
                 return new OptionalType(Create(splitValues.Last(), value));
-            }
-            else if (typeToResolve == Constants.PATH_TYPE_NAME
-                    || typeToResolve == Constants.CAPABILITY_TYPE_NAME
-                    || typeToResolve == Constants.FLOW_TYPE_NAME)
-            {
-                //the value node for these types is json with additional child elements
-                //use the typed class to parse it
-                var func = typeNameToJson[typeToResolve];
-                return func(value);
             }
 
             if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))

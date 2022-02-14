@@ -9,6 +9,10 @@ namespace Graffle.FlowSdk.Types
         private const string DOMAIN_NAME = "domain";
         private const string IDENTIFIER_NAME = "identifier";
 
+        public PathType(Dictionary<string, string> values)
+         : this(values[DOMAIN_NAME], values[IDENTIFIER_NAME])
+        { }
+
         public PathType(string domain, string identifier)
         {
             Data = new Dictionary<string, string>();
