@@ -514,5 +514,19 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.AreEqual(expectedValue, res);
         }
+
+        [TestMethod]
+        public void Create_Type_ReturnsFlowType()
+        {
+            var json = @"{""type"":""Type"",""value"":{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}}";
+
+            var res = FlowValueType.Create("Type", json);
+
+            Assert.IsInstanceOfType(res, typeof(FlowType));
+
+            var flowtype = res as FlowType;
+
+            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", flowtype.Data);
+        }
     }
 }
