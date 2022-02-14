@@ -131,7 +131,7 @@ namespace Graffle.FlowSdk.Types
 
         public static FlowValueType CreateFromCadence(string type, string cadenceJsonValue)
         {
-            if (type == null)
+            if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentNullException(nameof(type));
 
             if (typeNameToJson.TryGetValue(type, out var func))
@@ -146,7 +146,7 @@ namespace Graffle.FlowSdk.Types
 
         public static FlowValueType Create(string type, dynamic value)
         {
-            if (type == null)
+            if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentNullException(nameof(type));
 
             var splitValues = type.Split('|');
