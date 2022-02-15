@@ -7,12 +7,9 @@ namespace Graffle.FlowSdk.Types
 {
     public class StructType : FlowValueType
     {
-        protected StructType() { }
-
         public StructType(string id, List<(string name, FlowValueType value)> fields)
-        {
-            Data = (id, fields);
-        }
+            : this((id, fields))
+        { }
 
         public StructType((string id, List<(string name, FlowValueType value)> fields) value)
         {
