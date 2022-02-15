@@ -82,7 +82,8 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
                 { Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
-                { Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg) }
+                { Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg) },
+                { Constants.STRUCT_TYPE_NAME, (arg) => new StructType(arg) }
             };
 
             primitiveTypes = new HashSet<string>()

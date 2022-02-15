@@ -9,22 +9,28 @@ namespace Graffle.FlowSdk.Types
     {
         protected StructType() { }
 
-        public StructType(string id, IList<(string name, FlowValueType value)> fields)
+        public StructType(string id, List<(string name, FlowValueType value)> fields)
         {
-            Data = fields;
-            Id = id;
+            Data = (id, fields);
         }
 
-        public string Id { get; set; }
+        public StructType((string id, List<(string name, FlowValueType value)> fields) value)
+        {
+            Data = value;
+        }
 
-        public IList<(string name, FlowValueType value)> Data { get; set; }
+        public string Id => Data.id;
+
+        public List<(string name, FlowValueType value)> Fields => Data.fields;
+
+        public (string id, List<(string name, FlowValueType value)> fields) Data { get; set; }
 
         [JsonPropertyName("type")]
         public override string Type => Constants.STRUCT_TYPE_NAME;
 
         public override string AsJsonCadenceDataFormat()
         {
-            var valueArray = ValuesAsJson();
+            var valueArray = FieldsAsJson();
             var arrayString = $"[{string.Join(",", valueArray)}]";
             var result = $"{{\"type\":\"{Type}\",\"value\":{{\"fields\":{arrayString},\"id\":\"{Id}\"}}}}";
             return result;
@@ -32,7 +38,7 @@ namespace Graffle.FlowSdk.Types
 
         public override string DataAsJson()
         {
-            var valueArray = ValuesAsJson();
+            var valueArray = FieldsAsJson();
             var arrayString = $"[{string.Join(",", valueArray)}]";
             var result = $"{{\"fields\":{arrayString},\"id\":\"{Id}\"}}";
             return result;
@@ -66,9 +72,9 @@ namespace Graffle.FlowSdk.Types
             return result;
         }
 
-        private IEnumerable<string> ValuesAsJson()
+        private IEnumerable<string> FieldsAsJson()
         {
-            foreach (var item in Data)
+            foreach (var item in Data.fields)
             {
                 var name = item.name;
                 var value = item.value.AsJsonCadenceDataFormat();

@@ -65,23 +65,29 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             var data = structType.Data;
             Assert.IsNotNull(data);
-            Assert.AreEqual(2, data.Count);
+
+            var id = data.id;
+            Assert.AreEqual("idString", id);
+
+            var fields = data.fields;
+            Assert.IsNotNull(fields);
+            Assert.AreEqual(2, fields.Count);
 
             //verify data
-            var firstName = data[0].name;
+            var firstName = fields[0].name;
             Assert.AreEqual("intField", firstName);
 
-            var firstValue = data[0].value;
+            var firstValue = fields[0].value;
             Assert.IsNotNull(firstValue);
             Assert.IsInstanceOfType(firstValue, typeof(Int16Type));
 
             var intType = firstValue as Int16Type;
             Assert.AreEqual(123, intType.Data);
 
-            var secondName = data[1].name;
+            var secondName = fields[1].name;
             Assert.AreEqual("stringField", secondName);
 
-            var secondValue = data[1].value;
+            var secondValue = fields[1].value;
             Assert.IsNotNull(secondValue);
             Assert.IsInstanceOfType(secondValue, typeof(StringType));
 
