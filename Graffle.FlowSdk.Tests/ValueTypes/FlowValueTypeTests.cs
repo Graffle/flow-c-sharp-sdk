@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using Graffle.FlowSdk.Types;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
@@ -521,6 +522,36 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             bool res = FlowValueType.IsPrimitiveType(type);
 
             Assert.AreEqual(expectedValue, res);
+        }
+
+        [TestMethod]
+        public void DictionaryWithNestedStructs_CreateFromCadence_ReturnsDictionaryType()
+        {
+            var json = "{\"type\":\"Dictionary\",\"value\":[{\"key\":{\"type\":\"String\",\"value\":\"itemVideo\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"https://leela.mypinata.cloud/ipfs/QmeirDvh3TrDgtDdfvyjQXF87DusXksymtzmA4RABBVreo/LOOP.mp4\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"secondaryColor\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"545454\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"primaryColor\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"FF803E\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage4\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage3\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage2\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"season\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"1\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"https://leela.mypinata.cloud/ipfs/QmeirDvh3TrDgtDdfvyjQXF87DusXksymtzmA4RABBVreo/LOOP_poster.png\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}}]}";
+
+            var result = FlowValueType.CreateFromCadence("Dictionary", json);
+            Assert.IsNotNull(result);
+
+            var dict = result as DictionaryType;
+            var data = dict.Data;
+
+            foreach (var kvp in data)
+            {
+                var key = kvp.Key;
+                var value = kvp.Value;
+
+                Assert.AreEqual("String", key.Type);
+                Assert.AreEqual("Struct", value.Type);
+
+                Assert.IsInstanceOfType(value, typeof(StructType));
+
+                var structType = value as StructType;
+                var structData = structType.Data;
+
+                //just verify the struct has fields
+                //we can rely on tests for StructType for actual field parsing
+                Assert.IsTrue(structData.Any());
+            }
         }
     }
 }

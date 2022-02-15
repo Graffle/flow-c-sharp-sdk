@@ -50,6 +50,7 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD64_TYPE_NAME, Word64Type.FromJson },
                 { Constants.PATH_TYPE_NAME, PathType.FromJson },
                 { Constants.CAPABILITY_TYPE_NAME, CapabilityType.FromJson },
+                { Constants.STRUCT_TYPE_NAME, StructType.FromJson }
             };
 
             typeNameToCtor = new Dictionary<string, FlowValueTypeConstructor>()
