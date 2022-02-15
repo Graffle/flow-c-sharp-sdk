@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,7 +7,7 @@ namespace Graffle.FlowSdk.Types
 {
     public class StructType : FlowValueType
     {
-        public StructType() { }
+        protected StructType() { }
 
         public StructType(string id, IList<(string name, FlowValueType value)> fields)
         {
