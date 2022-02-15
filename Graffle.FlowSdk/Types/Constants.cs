@@ -31,5 +31,6 @@ namespace Graffle.FlowSdk.Types
         public const string WORD16_TYPE_NAME = "Word16";
         public const string WORD32_TYPE_NAME = "Word32";
         public const string WORD64_TYPE_NAME = "Word64";
+        public const string STRUCT_TYPE_NAME = "Struct";
     }
 }

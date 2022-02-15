@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using Graffle.FlowSdk.Types;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
@@ -521,6 +522,130 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             bool res = FlowValueType.IsPrimitiveType(type);
 
             Assert.AreEqual(expectedValue, res);
+        }
+
+        [TestMethod]
+        public void DictionaryWithNestedStructs_CreateFromCadence_ReturnsDictionaryType()
+        {
+            var json = "{\"type\":\"Dictionary\",\"value\":[{\"key\":{\"type\":\"String\",\"value\":\"itemVideo\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"https://leela.mypinata.cloud/ipfs/QmeirDvh3TrDgtDdfvyjQXF87DusXksymtzmA4RABBVreo/LOOP.mp4\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"secondaryColor\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"545454\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"primaryColor\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"FF803E\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage4\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage3\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage2\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"season\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"1\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":false}}]}}},{\"key\":{\"type\":\"String\",\"value\":\"itemImage\"},\"value\":{\"type\":\"Struct\",\"value\":{\"id\":\"A.2a37a78609bba037.TheFabricantS1ItemNFT.Metadata\",\"fields\":[{\"name\":\"metadataValue\",\"value\":{\"type\":\"String\",\"value\":\"https://leela.mypinata.cloud/ipfs/QmeirDvh3TrDgtDdfvyjQXF87DusXksymtzmA4RABBVreo/LOOP_poster.png\"}},{\"name\":\"mutable\",\"value\":{\"type\":\"Bool\",\"value\":true}}]}}}]}";
+
+            var result = FlowValueType.CreateFromCadence("Dictionary", json);
+            Assert.IsNotNull(result);
+
+            var dict = result as DictionaryType;
+            var data = dict.Data;
+
+            foreach (var kvp in data)
+            {
+                var key = kvp.Key;
+                var value = kvp.Value;
+
+                Assert.AreEqual("String", key.Type);
+                Assert.AreEqual("Struct", value.Type);
+
+                Assert.IsInstanceOfType(value, typeof(StructType));
+
+                var structType = value as StructType;
+                var structData = structType.Data;
+
+                //just verify the struct has fields
+                //we can rely on tests for StructType for actual field parsing
+                Assert.IsNotNull(structData);
+                Assert.IsTrue(structData.fields.Any());
+                Assert.IsFalse(string.IsNullOrEmpty(structData.id));
+            }
+        }
+
+        [TestMethod]
+        public void Create_StructType_ReturnsStructType()
+        {
+            var id = "structId";
+
+            var intType = new Int16Type(123);
+            var stringType = new StringType("asdf");
+
+            var fields = new List<(string name, FlowValueType value)>()
+            {
+                ("intTypeId", intType),
+                ("stringTypeId", stringType)
+            };
+
+            var value = (id, fields);
+
+            var result = FlowValueType.Create("Struct", value);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(StructType));
+
+            var structType = result as StructType;
+
+            Assert.AreEqual(id, structType.Id);
+
+            var resultFields = structType.Fields;
+            Assert.IsNotNull(resultFields);
+            Assert.AreEqual(fields.Count, resultFields.Count);
+
+            //verify individual fields
+            var firstField = resultFields[0];
+            Assert.AreEqual("intTypeId", firstField.name);
+            var firstValue = firstField.value;
+            Assert.IsNotNull(firstValue);
+            Assert.IsInstanceOfType(firstValue, typeof(Int16Type));
+            var resultIntType = firstValue as Int16Type;
+            Assert.AreEqual(intType.Data, resultIntType.Data);
+
+            var secondField = resultFields[1];
+            Assert.AreEqual("stringTypeId", secondField.name);
+            var secondValue = secondField.value;
+            Assert.IsNotNull(secondValue);
+            Assert.IsInstanceOfType(secondValue, typeof(StringType));
+            var resultStringType = secondValue as StringType;
+            Assert.AreEqual(intType.Data, resultIntType.Data);
+        }
+
+        [TestMethod]
+        public void CreateFromCadence_StructType_ReturnsStructType()
+        {
+            var json = @"{""type"":""Struct"",""value"":{""fields"":[{""name"":""intField"",""value"":{""type"":""Int16"",""value"":""123""}},{""name"":""stringField"",""value"":{""type"":""String"",""value"":""hello""}}],""id"":""idString""}}";
+
+            var result = FlowValueType.CreateFromCadence(json);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(StructType));
+
+            var structType = result as StructType;
+            Assert.AreEqual("Struct", structType.Type);
+
+            var data = structType.Data;
+            Assert.IsNotNull(data);
+
+            var id = data.id;
+            Assert.AreEqual("idString", id);
+
+            var fields = data.fields;
+            Assert.IsNotNull(fields);
+            Assert.AreEqual(2, fields.Count);
+
+            //verify data
+            var firstName = fields[0].name;
+            Assert.AreEqual("intField", firstName);
+
+            var firstValue = fields[0].value;
+            Assert.IsNotNull(firstValue);
+            Assert.IsInstanceOfType(firstValue, typeof(Int16Type));
+
+            var intType = firstValue as Int16Type;
+            Assert.AreEqual(123, intType.Data);
+
+            var secondName = fields[1].name;
+            Assert.AreEqual("stringField", secondName);
+
+            var secondValue = fields[1].value;
+            Assert.IsNotNull(secondValue);
+            Assert.IsInstanceOfType(secondValue, typeof(StringType));
+
+            var stringType = secondValue as StringType;
+            Assert.AreEqual("hello", stringType.Data);
         }
     }
 }
