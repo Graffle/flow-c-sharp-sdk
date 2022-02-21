@@ -551,8 +551,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
                 //just verify the struct has fields
                 //we can rely on tests for StructType for actual field parsing
                 Assert.IsNotNull(structData);
-                Assert.IsTrue(structData.fields.Any());
-                Assert.IsFalse(string.IsNullOrEmpty(structData.id));
+                Assert.IsTrue(structData.Fields.Any());
+                Assert.IsFalse(string.IsNullOrEmpty(structData.Id));
             }
         }
 
@@ -564,13 +564,13 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var intType = new Int16Type(123);
             var stringType = new StringType("asdf");
 
-            var fields = new List<(string name, FlowValueType value)>()
+            var fields = new List<StructField>()
             {
-                ("intTypeId", intType),
-                ("stringTypeId", stringType)
+                new StructField("intTypeId", intType),
+                new StructField("stringTypeId", stringType)
             };
 
-            var value = (id, fields);
+            var value = new StructData(id, fields);
 
             var result = FlowValueType.Create("Struct", value);
 
@@ -587,16 +587,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             //verify individual fields
             var firstField = resultFields[0];
-            Assert.AreEqual("intTypeId", firstField.name);
-            var firstValue = firstField.value;
+            Assert.AreEqual("intTypeId", firstField.Name);
+            var firstValue = firstField.Value;
             Assert.IsNotNull(firstValue);
             Assert.IsInstanceOfType(firstValue, typeof(Int16Type));
             var resultIntType = firstValue as Int16Type;
             Assert.AreEqual(intType.Data, resultIntType.Data);
 
             var secondField = resultFields[1];
-            Assert.AreEqual("stringTypeId", secondField.name);
-            var secondValue = secondField.value;
+            Assert.AreEqual("stringTypeId", secondField.Name);
+            var secondValue = secondField.Value;
             Assert.IsNotNull(secondValue);
             Assert.IsInstanceOfType(secondValue, typeof(StringType));
             var resultStringType = secondValue as StringType;
@@ -619,28 +619,28 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var data = structType.Data;
             Assert.IsNotNull(data);
 
-            var id = data.id;
+            var id = data.Id;
             Assert.AreEqual("idString", id);
 
-            var fields = data.fields;
+            var fields = data.Fields;
             Assert.IsNotNull(fields);
             Assert.AreEqual(2, fields.Count);
 
             //verify data
-            var firstName = fields[0].name;
+            var firstName = fields[0].Name;
             Assert.AreEqual("intField", firstName);
 
-            var firstValue = fields[0].value;
+            var firstValue = fields[0].Value;
             Assert.IsNotNull(firstValue);
             Assert.IsInstanceOfType(firstValue, typeof(Int16Type));
 
             var intType = firstValue as Int16Type;
             Assert.AreEqual(123, intType.Data);
 
-            var secondName = fields[1].name;
+            var secondName = fields[1].Name;
             Assert.AreEqual("stringField", secondName);
 
-            var secondValue = fields[1].value;
+            var secondValue = fields[1].Value;
             Assert.IsNotNull(secondValue);
             Assert.IsInstanceOfType(secondValue, typeof(StringType));
 

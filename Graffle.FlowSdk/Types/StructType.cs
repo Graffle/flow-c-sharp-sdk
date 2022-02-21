@@ -7,20 +7,21 @@ namespace Graffle.FlowSdk.Types
 {
     public class StructType : FlowValueType
     {
-        public StructType(string id, List<(string name, FlowValueType value)> fields)
-            : this((id, fields))
-        { }
-
-        public StructType((string id, List<(string name, FlowValueType value)> fields) value)
+        public StructType(string id, List<StructField> fields)
         {
-            Data = value;
+            Data = new StructData(id, fields);
         }
 
-        public string Id => Data.id;
+        public StructType(StructData data)
+        {
+            Data = data;
+        }
 
-        public List<(string name, FlowValueType value)> Fields => Data.fields;
+        public string Id => Data.Id;
 
-        public (string id, List<(string name, FlowValueType value)> fields) Data { get; set; }
+        public List<StructField> Fields => Data.Fields;
+
+        public StructData Data { get; set; }
 
         [JsonPropertyName("type")]
         public override string Type => Constants.STRUCT_TYPE_NAME;
@@ -50,7 +51,7 @@ namespace Graffle.FlowSdk.Types
             var id = rootValue.GetProperty("id").GetString(); //struct id
             var fields = rootValue.GetProperty("fields").EnumerateArray().Select(h => h.EnumerateObject().ToDictionary(n => n.Name, n => n.Value.ToString())); //field array
 
-            var parsedFields = new List<(string, FlowValueType)>();
+            var parsedFields = new List<StructField>();
             foreach (var item in fields)
             {
                 //name
@@ -62,7 +63,7 @@ namespace Graffle.FlowSdk.Types
                 var valueJsonType = valueJsonElementsKvp.FirstOrDefault(z => z.Key == "type").Value;
                 var flowValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item.Values.Last());
 
-                parsedFields.Add((name, flowValue));
+                parsedFields.Add(new StructField(name, flowValue));
             }
 
             var result = new StructType(id, parsedFields);
@@ -71,10 +72,10 @@ namespace Graffle.FlowSdk.Types
 
         private IEnumerable<string> FieldsAsJson()
         {
-            foreach (var item in Data.fields)
+            foreach (var item in Data.Fields)
             {
-                var name = item.name;
-                var value = item.value.AsJsonCadenceDataFormat();
+                var name = item.Name;
+                var value = item.Value.AsJsonCadenceDataFormat();
                 var entry = $"{{\"name\":\"{name}\",\"value\":{value}}}";
                 yield return entry;
             }
