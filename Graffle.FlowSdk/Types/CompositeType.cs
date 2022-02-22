@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types
 {
+    /// <summary>
+    /// Struct, Resource, Event, Contract, Enum
+    /// </summary>
     public class CompositeType : FlowValueType
     {
         private readonly string _type;
