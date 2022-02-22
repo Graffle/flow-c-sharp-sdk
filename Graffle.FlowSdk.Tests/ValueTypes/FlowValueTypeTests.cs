@@ -550,14 +550,14 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
                 Assert.IsInstanceOfType(value, typeof(CompositeType));
 
-                var structType = value as CompositeType;
-                var structData = structType.Data;
+                var compositeType = value as CompositeType;
+                var compositeData = compositeType.Data;
 
                 //just verify the struct has fields
-                //we can rely on tests for StructType for actual field parsing
-                Assert.IsNotNull(structData);
-                Assert.IsTrue(structData.Fields.Any());
-                Assert.IsFalse(string.IsNullOrEmpty(structData.Id));
+                //we can rely on tests for CompositeType for actual field parsing
+                Assert.IsNotNull(compositeData);
+                Assert.IsTrue(compositeData.Fields.Any());
+                Assert.IsFalse(string.IsNullOrEmpty(compositeData.Id));
             }
         }
 
