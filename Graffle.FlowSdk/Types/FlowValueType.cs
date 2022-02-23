@@ -16,6 +16,7 @@ namespace Graffle.FlowSdk.Types
         private static readonly Dictionary<string, FromCadenceJson> typeNameToJson;
         private static readonly Dictionary<string, FlowValueTypeConstructor> typeNameToCtor;
         private static readonly HashSet<string> primitiveTypes;
+        private static readonly HashSet<string> compositeTypes;
 
         static FlowValueType()
         {
@@ -120,6 +121,15 @@ namespace Graffle.FlowSdk.Types
                 Constants.WORD32_TYPE_NAME,
                 Constants.WORD64_TYPE_NAME,
             };
+
+            compositeTypes = new HashSet<string>()
+            {
+                Constants.STRUCT_TYPE_NAME,
+                Constants.RESOURCE_TYPE_NAME,
+                Constants.EVENT_TYPE_NAME,
+                Constants.CONTRACT_TYPE_NAME,
+                Constants.ENUM_TYPE_NAME,
+            };
         }
 
         [JsonPropertyName("type")]
@@ -188,5 +198,7 @@ namespace Graffle.FlowSdk.Types
         }
 
         public static bool IsPrimitiveType(string type) => primitiveTypes.Contains(type);
+
+        public static bool IsCompositeType(string type) => compositeTypes.Contains(type);
     }
 }

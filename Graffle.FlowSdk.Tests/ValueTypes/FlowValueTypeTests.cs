@@ -663,5 +663,47 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var stringType = secondValue as StringType;
             Assert.AreEqual("hello", stringType.Data);
         }
+
+        [TestMethod]
+        [DataRow("Address", false)]
+        [DataRow("String", false)]
+        [DataRow("Bool", false)]
+        [DataRow("UInt", false)]
+        [DataRow("UInt8", false)]
+        [DataRow("UInt16", false)]
+        [DataRow("UInt32", false)]
+        [DataRow("UInt64", false)]
+        [DataRow("UInt128", false)]
+        [DataRow("UInt256", false)]
+        [DataRow("Int", false)]
+        [DataRow("Int8", false)]
+        [DataRow("Int16", false)]
+        [DataRow("Int32", false)]
+        [DataRow("Int64", false)]
+        [DataRow("Int128", false)]
+        [DataRow("Int256", false)]
+        [DataRow("UFix64", false)]
+        [DataRow("Fix64", false)]
+        [DataRow("Word8", false)]
+        [DataRow("Word16", false)]
+        [DataRow("Word32", false)]
+        [DataRow("Word64", false)]
+        [DataRow("Optional", false)]
+        [DataRow("Path", false)]
+        [DataRow("Capability", false)]
+        [DataRow("Dictionary", false)]
+        [DataRow("Array", false)]
+        [DataRow("Type", false)]
+        [DataRow("Struct", true)]
+        [DataRow("Resource", true)]
+        [DataRow("Event", true)]
+        [DataRow("Contract", true)]
+        [DataRow("Enum", true)]
+        public void IsCompositeType_ReturnsCorrectValue(string type, bool expectedResult)
+        {
+            var result = FlowValueType.IsCompositeType(type);
+
+            Assert.AreEqual(expectedResult, result);
+        }
     }
 }
