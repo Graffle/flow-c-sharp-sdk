@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Graffle.FlowSdk.Types
 {
-    public class StructData
+    public class CompositeData
     {
-        public StructData(string id, List<StructField> fields)
+        public CompositeData(string id, List<CompositeField> fields)
         {
             Id = id;
             Fields = fields;
@@ -12,6 +12,6 @@ namespace Graffle.FlowSdk.Types
 
         public string Id { get; set; }
 
-        public List<StructField> Fields { get; set; }
+        public List<CompositeField> Fields { get; set; }
     }
 }

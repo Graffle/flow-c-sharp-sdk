@@ -517,6 +517,11 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [DataRow("Dictionary", false)]
         [DataRow("Array", false)]
         [DataRow("Type", false)]
+        [DataRow("Struct", false)]
+        [DataRow("Resource", false)]
+        [DataRow("Event", false)]
+        [DataRow("Contract", false)]
+        [DataRow("Enum", false)]
         public void IsPrimitiveType_Test(string type, bool expectedValue)
         {
             bool res = FlowValueType.IsPrimitiveType(type);
@@ -543,45 +548,51 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
                 Assert.AreEqual("String", key.Type);
                 Assert.AreEqual("Struct", value.Type);
 
-                Assert.IsInstanceOfType(value, typeof(StructType));
+                Assert.IsInstanceOfType(value, typeof(CompositeType));
 
-                var structType = value as StructType;
-                var structData = structType.Data;
+                var compositeType = value as CompositeType;
+                var compositeData = compositeType.Data;
 
                 //just verify the struct has fields
-                //we can rely on tests for StructType for actual field parsing
-                Assert.IsNotNull(structData);
-                Assert.IsTrue(structData.Fields.Any());
-                Assert.IsFalse(string.IsNullOrEmpty(structData.Id));
+                //we can rely on tests for CompositeType for actual field parsing
+                Assert.IsNotNull(compositeData);
+                Assert.IsTrue(compositeData.Fields.Any());
+                Assert.IsFalse(string.IsNullOrEmpty(compositeData.Id));
             }
         }
 
         [TestMethod]
-        public void Create_StructType_ReturnsStructType()
+        [DataRow("Struct")]
+        [DataRow("Resource")]
+        [DataRow("Event")]
+        [DataRow("Contract")]
+        [DataRow("Enum")]
+        public void Create_CompositeType_ReturnsCompositeType(string type)
         {
             var id = "structId";
 
             var intType = new Int16Type(123);
             var stringType = new StringType("asdf");
 
-            var fields = new List<StructField>()
+            var fields = new List<CompositeField>()
             {
-                new StructField("intTypeId", intType),
-                new StructField("stringTypeId", stringType)
+                new CompositeField("intTypeId", intType),
+                new CompositeField("stringTypeId", stringType)
             };
 
-            var value = new StructData(id, fields);
+            var value = new CompositeData(id, fields);
 
-            var result = FlowValueType.Create("Struct", value);
+            var result = FlowValueType.Create(type, value);
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(StructType));
+            Assert.IsInstanceOfType(result, typeof(CompositeType));
 
-            var structType = result as StructType;
+            var composite = result as CompositeType;
 
-            Assert.AreEqual(id, structType.Id);
+            Assert.AreEqual(type, composite.Type);
+            Assert.AreEqual(id, composite.Id);
 
-            var resultFields = structType.Fields;
+            var resultFields = composite.Fields;
             Assert.IsNotNull(resultFields);
             Assert.AreEqual(fields.Count, resultFields.Count);
 
@@ -604,19 +615,24 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
-        public void CreateFromCadence_StructType_ReturnsStructType()
+        [DataRow("Struct")]
+        [DataRow("Resource")]
+        [DataRow("Event")]
+        [DataRow("Contract")]
+        [DataRow("Enum")]
+        public void CreateFromCadence_CompositeType_ReturnsCompositeType(string type)
         {
-            var json = @"{""type"":""Struct"",""value"":{""fields"":[{""name"":""intField"",""value"":{""type"":""Int16"",""value"":""123""}},{""name"":""stringField"",""value"":{""type"":""String"",""value"":""hello""}}],""id"":""idString""}}";
+            var json = $"{{\"type\":\"{type}\",\"value\":{{\"fields\":[{{\"name\":\"intField\",\"value\":{{\"type\":\"Int16\",\"value\":\"123\"}}}},{{\"name\":\"stringField\",\"value\":{{\"type\":\"String\",\"value\":\"hello\"}}}}],\"id\":\"idString\"}}}}";
 
             var result = FlowValueType.CreateFromCadence(json);
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(StructType));
+            Assert.IsInstanceOfType(result, typeof(CompositeType));
 
-            var structType = result as StructType;
-            Assert.AreEqual("Struct", structType.Type);
+            var composite = result as CompositeType;
+            Assert.AreEqual(type, composite.Type);
 
-            var data = structType.Data;
+            var data = composite.Data;
             Assert.IsNotNull(data);
 
             var id = data.Id;
@@ -646,6 +662,48 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             var stringType = secondValue as StringType;
             Assert.AreEqual("hello", stringType.Data);
+        }
+
+        [TestMethod]
+        [DataRow("Address", false)]
+        [DataRow("String", false)]
+        [DataRow("Bool", false)]
+        [DataRow("UInt", false)]
+        [DataRow("UInt8", false)]
+        [DataRow("UInt16", false)]
+        [DataRow("UInt32", false)]
+        [DataRow("UInt64", false)]
+        [DataRow("UInt128", false)]
+        [DataRow("UInt256", false)]
+        [DataRow("Int", false)]
+        [DataRow("Int8", false)]
+        [DataRow("Int16", false)]
+        [DataRow("Int32", false)]
+        [DataRow("Int64", false)]
+        [DataRow("Int128", false)]
+        [DataRow("Int256", false)]
+        [DataRow("UFix64", false)]
+        [DataRow("Fix64", false)]
+        [DataRow("Word8", false)]
+        [DataRow("Word16", false)]
+        [DataRow("Word32", false)]
+        [DataRow("Word64", false)]
+        [DataRow("Optional", false)]
+        [DataRow("Path", false)]
+        [DataRow("Capability", false)]
+        [DataRow("Dictionary", false)]
+        [DataRow("Array", false)]
+        [DataRow("Type", false)]
+        [DataRow("Struct", true)]
+        [DataRow("Resource", true)]
+        [DataRow("Event", true)]
+        [DataRow("Contract", true)]
+        [DataRow("Enum", true)]
+        public void IsCompositeType_ReturnsCorrectValue(string type, bool expectedResult)
+        {
+            var result = FlowValueType.IsCompositeType(type);
+
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }

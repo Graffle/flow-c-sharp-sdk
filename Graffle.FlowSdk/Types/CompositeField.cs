@@ -1,8 +1,8 @@
 namespace Graffle.FlowSdk.Types
 {
-    public class StructField
+    public class CompositeField
     {
-        public StructField(string name, FlowValueType value)
+        public CompositeField(string name, FlowValueType value)
         {
             Name = name;
             Value = value;

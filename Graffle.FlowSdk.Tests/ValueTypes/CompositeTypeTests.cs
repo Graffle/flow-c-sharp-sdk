@@ -1,34 +1,37 @@
-using System;
-using System.Collections.Generic;
 using Graffle.FlowSdk.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
 {
     [TestClass]
-    public class StructTypeTests
+    public class CompositeTypeTests
     {
         [TestMethod]
-        public void AsJsonCadenceDataFormat_ReturnsValidJson()
+        [DataRow("Struct")]
+        [DataRow("Resource")]
+        [DataRow("Event")]
+        [DataRow("Contract")]
+        [DataRow("Enum")]
+        public void AsJsonCadenceDataFormat_ReturnsValidJson(string type)
         {
-            var expectedJson = @"{""type"":""Struct"",""value"":{""fields"":[{""name"":""intField"",""value"":{""type"":""Int16"",""value"":""123""}},{""name"":""stringField"",""value"":{""type"":""String"",""value"":""hello""}}],""id"":""idString""}}";
+            var expectedJson = $"{{\"type\":\"{type}\",\"value\":{{\"fields\":[{{\"name\":\"intField\",\"value\":{{\"type\":\"Int16\",\"value\":\"123\"}}}},{{\"name\":\"stringField\",\"value\":{{\"type\":\"String\",\"value\":\"hello\"}}}}],\"id\":\"idString\"}}}}";
 
             var id = "idString";
             var intType = new Int16Type(123);
             var stringType = new StringType("hello");
-            var fields = new List<StructField>()
+            var fields = new List<CompositeField>()
             {
-                new StructField("intField", intType),
-                new StructField("stringField", stringType)
+                new CompositeField("intField", intType),
+                new CompositeField("stringField", stringType)
             };
 
-            var structType = new StructType(id, fields);
+            var composite = new CompositeType(type, id, fields);
 
-            var json = structType.AsJsonCadenceDataFormat();
+            var json = composite.AsJsonCadenceDataFormat();
 
             Assert.AreEqual(expectedJson, json);
-            Assert.AreEqual(id, structType.Id);
+            Assert.AreEqual(id, composite.Id);
         }
 
         [TestMethod]
@@ -39,31 +42,35 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var id = "idString";
             var intType = new Int16Type(123);
             var stringType = new StringType("hello");
-            var fields = new List<StructField>()
+            var fields = new List<CompositeField>()
             {
-                new StructField("intField", intType),
-                new StructField("stringField", stringType)
+                new CompositeField("intField", intType),
+                new CompositeField("stringField", stringType)
             };
 
-            var structType = new StructType(id, fields);
+            var composite = new CompositeType("Struct", id, fields);
 
-            var json = structType.DataAsJson();
+            var json = composite.DataAsJson();
 
             Assert.AreEqual(expectedJson, json);
-            Assert.AreEqual(id, structType.Id);
+            Assert.AreEqual(id, composite.Id);
         }
 
         [TestMethod]
-        public void GivenValidJson_FromJson_ReturnsStructType()
+        [DataRow("Struct")]
+        [DataRow("Resource")]
+        [DataRow("Event")]
+        [DataRow("Contract")]
+        [DataRow("Enum")]
+        public void GivenValidJson_FromJson_ReturnsCompositeType(string type)
         {
-            var json = @"{""type"":""Struct"",""value"":{""fields"":[{""name"":""intField"",""value"":{""type"":""Int16"",""value"":""123""}},{""name"":""stringField"",""value"":{""type"":""String"",""value"":""hello""}}],""id"":""idString""}}";
+            var json = $"{{\"type\":\"{type}\",\"value\":{{\"fields\":[{{\"name\":\"intField\",\"value\":{{\"type\":\"Int16\",\"value\":\"123\"}}}},{{\"name\":\"stringField\",\"value\":{{\"type\":\"String\",\"value\":\"hello\"}}}}],\"id\":\"idString\"}}}}";
 
-            var structType = StructType.FromJson(json);
-            Assert.IsNotNull(structType);
+            var composite = CompositeType.FromJson(json);
+            Assert.IsNotNull(composite);
+            Assert.AreEqual(type, composite.Type);
 
-            Assert.AreEqual("Struct", structType.Type);
-
-            var data = structType.Data;
+            var data = composite.Data;
             Assert.IsNotNull(data);
 
             var id = data.Id;

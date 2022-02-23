@@ -1,40 +1,90 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types
 {
+    /// <summary>
+    /// Struct, Resource, Event, Contract, Enum
+    /// </summary>
     public class CompositeType : FlowValueType
     {
-        public CompositeType()
+        private readonly string _type;
+
+        public CompositeType(string type, string id, List<CompositeField> fields)
         {
+            _type = type;
+            Data = new CompositeData(id, fields);
         }
-        public CompositeType(string type)
+
+        public CompositeType(string type, CompositeData data)
         {
-            Type = type;
+            _type = type;
+            Data = data;
         }
 
-        [JsonPropertyName("type")]
-        public override string Type { get; }
+        public string Id => Data.Id;
 
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public List<CompositeField> Fields => Data.Fields;
 
-        [JsonPropertyName("data")]
-        public Dictionary<string, string> Data { get; set; }
+        public CompositeData Data { get; set; }
+
+        public override string Type => _type;
 
         public override string AsJsonCadenceDataFormat()
         {
-            var fields = new List<string>();
-            foreach (var field in Data)
-            {
-                var json = $"{{\"name\":\"{field.Key}\",\"value\":{field.Value}}}";
-                fields.Add(json);
-            }
-            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"id\":\"{Id}\",\"fields\":[{string.Join(',', fields)}]}}}}";
+            var valueArray = FieldsAsJson();
+            var arrayString = $"[{string.Join(",", valueArray)}]";
+            var result = $"{{\"type\":\"{Type}\",\"value\":{{\"fields\":{arrayString},\"id\":\"{Id}\"}}}}";
             return result;
         }
 
         public override string DataAsJson()
-            => Newtonsoft.Json.JsonConvert.SerializeObject(this.Data);
+        {
+            var valueArray = FieldsAsJson();
+            var arrayString = $"[{string.Join(",", valueArray)}]";
+            var result = $"{{\"fields\":{arrayString},\"id\":\"{Id}\"}}";
+            return result;
+        }
+
+        public static CompositeType FromJson(string json)
+        {
+            var parsedJson = JsonDocument.Parse(json);
+            var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
+            var type = root.FirstOrDefault(z => z.Key == "type").Value.GetString();
+            var rootValue = root.FirstOrDefault(z => z.Key == "value").Value;
+
+            var id = rootValue.GetProperty("id").GetString(); //struct id
+            var fields = rootValue.GetProperty("fields").EnumerateArray().Select(h => h.EnumerateObject().ToDictionary(n => n.Name, n => n.Value.ToString())); //field array
+
+            var parsedFields = new List<CompositeField>();
+            foreach (var item in fields)
+            {
+                //name
+                var name = item.Values.First();
+
+                //value
+                var valueJson = JsonDocument.Parse(item.Values.Last());
+                var valueJsonElementsKvp = valueJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
+                var valueJsonType = valueJsonElementsKvp.FirstOrDefault(z => z.Key == "type").Value;
+                var flowValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item.Values.Last());
+
+                parsedFields.Add(new CompositeField(name, flowValue));
+            }
+
+            var result = new CompositeType(type, id, parsedFields);
+            return result;
+        }
+
+        private IEnumerable<string> FieldsAsJson()
+        {
+            foreach (var item in Data.Fields)
+            {
+                var name = item.Name;
+                var value = item.Value.AsJsonCadenceDataFormat();
+                var entry = $"{{\"name\":\"{name}\",\"value\":{value}}}";
+                yield return entry;
+            }
+        }
     }
 }

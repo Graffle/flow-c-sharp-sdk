@@ -16,6 +16,7 @@ namespace Graffle.FlowSdk.Types
         private static readonly Dictionary<string, FromCadenceJson> typeNameToJson;
         private static readonly Dictionary<string, FlowValueTypeConstructor> typeNameToCtor;
         private static readonly HashSet<string> primitiveTypes;
+        private static readonly HashSet<string> compositeTypes;
 
         static FlowValueType()
         {
@@ -50,7 +51,11 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD64_TYPE_NAME, Word64Type.FromJson },
                 { Constants.PATH_TYPE_NAME, PathType.FromJson },
                 { Constants.CAPABILITY_TYPE_NAME, CapabilityType.FromJson },
-                { Constants.STRUCT_TYPE_NAME, StructType.FromJson }
+                { Constants.STRUCT_TYPE_NAME, CompositeType.FromJson },
+                { Constants.RESOURCE_TYPE_NAME, CompositeType.FromJson },
+                { Constants.EVENT_TYPE_NAME, CompositeType.FromJson },
+                { Constants.CONTRACT_TYPE_NAME, CompositeType.FromJson },
+                { Constants.ENUM_TYPE_NAME, CompositeType.FromJson },
             };
 
             typeNameToCtor = new Dictionary<string, FlowValueTypeConstructor>()
@@ -83,7 +88,11 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
                 { Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
                 { Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg) },
-                { Constants.STRUCT_TYPE_NAME, (arg) => new StructType(arg) }
+                { Constants.STRUCT_TYPE_NAME, (arg) => new CompositeType(Constants.STRUCT_TYPE_NAME, arg) },
+                { Constants.RESOURCE_TYPE_NAME, (arg) => new CompositeType(Constants.RESOURCE_TYPE_NAME, arg) },
+                { Constants.EVENT_TYPE_NAME, (arg) => new CompositeType(Constants.EVENT_TYPE_NAME, arg) },
+                { Constants.CONTRACT_TYPE_NAME, (arg) => new CompositeType(Constants.CONTRACT_TYPE_NAME, arg) },
+                { Constants.ENUM_TYPE_NAME, (arg) => new CompositeType(Constants.ENUM_TYPE_NAME, arg) },
             };
 
             primitiveTypes = new HashSet<string>()
@@ -111,6 +120,15 @@ namespace Graffle.FlowSdk.Types
                 Constants.WORD16_TYPE_NAME,
                 Constants.WORD32_TYPE_NAME,
                 Constants.WORD64_TYPE_NAME,
+            };
+
+            compositeTypes = new HashSet<string>()
+            {
+                Constants.STRUCT_TYPE_NAME,
+                Constants.RESOURCE_TYPE_NAME,
+                Constants.EVENT_TYPE_NAME,
+                Constants.CONTRACT_TYPE_NAME,
+                Constants.ENUM_TYPE_NAME,
             };
         }
 
@@ -180,5 +198,7 @@ namespace Graffle.FlowSdk.Types
         }
 
         public static bool IsPrimitiveType(string type) => primitiveTypes.Contains(type);
+
+        public static bool IsCompositeType(string type) => compositeTypes.Contains(type);
     }
 }

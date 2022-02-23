@@ -32,5 +32,9 @@ namespace Graffle.FlowSdk.Types
         public const string WORD32_TYPE_NAME = "Word32";
         public const string WORD64_TYPE_NAME = "Word64";
         public const string STRUCT_TYPE_NAME = "Struct";
+        public const string RESOURCE_TYPE_NAME = "Resource";
+        public const string EVENT_TYPE_NAME = "Event";
+        public const string CONTRACT_TYPE_NAME = "Contract";
+        public const string ENUM_TYPE_NAME = "Enum";
     }
 }
