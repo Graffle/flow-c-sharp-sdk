@@ -1,9 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using Google.Protobuf;
 
 namespace Graffle.FlowSdk.Tests.ExtensionsTests
 {
