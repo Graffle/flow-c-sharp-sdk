@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Graffle.FlowSdk.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Text;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Graffle.FlowSdk.Tests.BlockTests
 {
@@ -12,13 +11,15 @@ namespace Graffle.FlowSdk.Tests.BlockTests
     public class BlockHeightTests
     {
         private FlowClient flowClient { get; }
-        
-        public BlockHeightTests(){
+
+        public BlockHeightTests()
+        {
             this.flowClient = FlowClient.Create(TestHelpers.EmulatorURI);
         }
 
         [TestMethod]
-        public async Task When_GetLatestBlockAsync_Then_Return_Latest_Block(){
+        public async Task When_GetLatestBlockAsync_Then_Return_Latest_Block()
+        {
             var latestBlockResponse = await this.flowClient.GetLatestBlockAsync(true);
             Assert.IsNotNull(latestBlockResponse);
             Assert.IsNotNull(latestBlockResponse.Block.Id);
@@ -29,7 +30,8 @@ namespace Graffle.FlowSdk.Tests.BlockTests
         }
 
         [TestMethod]
-        public async Task When_GetBlockByHeightAsync_Then_Return_Block(){
+        public async Task When_GetBlockByHeightAsync_Then_Return_Block()
+        {
             var latestBlockResponse = await this.flowClient.GetBlockByHeightAsync(0);
             Assert.IsNotNull(latestBlockResponse);
             Assert.IsNotNull(latestBlockResponse.Block.Id);
@@ -40,15 +42,16 @@ namespace Graffle.FlowSdk.Tests.BlockTests
         }
 
         [TestMethod]
-        public async Task Given_HelloWorld_When_ExecuteScriptAtBlockHeightAsync_Then_Return_Successful_Result(){
+        public async Task Given_HelloWorld_When_ExecuteScriptAtBlockHeightAsync_Then_Return_Successful_Result()
+        {
             var helloWorldScript = @"
                 pub fun main(): String {
                     return ""Hello World""
                 }               
             ";
-            
+
             var scriptBytes = Encoding.ASCII.GetBytes(helloWorldScript);
-            
+
             var scriptResponse = await flowClient.ExecuteScriptAtBlockHeightAsync(0, scriptBytes, new List<FlowValueType>());
             var metaDataJson = Encoding.Default.GetString(scriptResponse.Value.ToByteArray());
             var result = StringType.FromJson(metaDataJson);

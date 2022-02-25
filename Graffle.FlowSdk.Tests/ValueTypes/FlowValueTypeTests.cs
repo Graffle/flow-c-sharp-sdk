@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using Graffle.FlowSdk.Types;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
 {
