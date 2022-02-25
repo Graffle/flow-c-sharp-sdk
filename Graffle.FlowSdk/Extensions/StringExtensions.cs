@@ -4,13 +4,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Google.Protobuf;
 
-namespace Graffle.FlowSdk {
-    public static class StringExtensions {
+namespace Graffle.FlowSdk
+{
+    public static class StringExtensions
+    {
         public static byte[] HexToByteArray(this string hexString)
         {
             var characterCount = hexString.Length;
             var byteArray = new byte[characterCount / 2];
-            for (int i = 0; i < characterCount; i += 2) {
+            for (int i = 0; i < characterCount; i += 2)
+            {
                 byteArray[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
             }
             return byteArray;
@@ -19,7 +22,8 @@ namespace Graffle.FlowSdk {
         public static string ByteArrayToHex(this byte[] byteArray)
         {
             var hexString = new StringBuilder(byteArray.Length * 2);
-            foreach (var b in byteArray) {
+            foreach (var b in byteArray)
+            {
                 hexString.AppendFormat("{0:x2}", b);
             }
             return hexString.ToString();
@@ -38,7 +42,7 @@ namespace Graffle.FlowSdk {
 
         public static string RemoveHexPrefix(this string hex)
         {
-            return hex.Substring(hex.StartsWith("0x") ? 2 : 0);            
+            return hex.Substring(hex.StartsWith("0x") ? 2 : 0);
         }
 
         public static byte[] HexToBytes(this string hex)
@@ -53,8 +57,8 @@ namespace Graffle.FlowSdk {
                     .ToArray();
             }
 
-            throw new Exception("Invalid hex string.");      
-        }        
+            throw new Exception("Invalid hex string.");
+        }
 
         public static bool IsHexString(string str)
         {
@@ -71,7 +75,7 @@ namespace Graffle.FlowSdk {
             catch (Exception exception)
             {
                 throw new Exception("Failed to determine if string is hex.", exception);
-            }            
+            }
         }
 
         public static string StringToHex(this string str)
@@ -83,17 +87,17 @@ namespace Graffle.FlowSdk {
             catch (Exception exception)
             {
                 throw new Exception("Failed to convert string to hex.", exception);
-            }            
+            }
         }
 
         public static ByteString StringToByteString(this string str)
         {
-            return ByteString.CopyFromUtf8(str);     
+            return ByteString.CopyFromUtf8(str);
         }
-        
+
         public static ByteString ByteArrayToByteString(this byte[] bytes)
         {
-            return ByteString.CopyFrom(bytes);           
+            return ByteString.CopyFrom(bytes);
         }
     }
 }
