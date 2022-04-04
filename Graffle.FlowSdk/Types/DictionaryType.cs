@@ -25,10 +25,23 @@ namespace Graffle.FlowSdk.Types
         public static DictionaryType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
-            var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
-            var rootValue = root.FirstOrDefault(z => z.Key == "value").Value.EnumerateArray().Select(h => h.EnumerateObject().ToDictionary(n => n.Name, n => n.Value.ToString()));
+
+            JsonElement values;
+            if (parsedJson.RootElement.ValueKind == JsonValueKind.Array)
+            {
+                //this function might be called with just the inner json for the value node
+                //just read directly from root
+                values = parsedJson.RootElement;
+            }
+            else
+            {
+                var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
+                values = root.FirstOrDefault(z => z.Key == "value").Value;
+            }
+
+            var dictionaryValues = values.EnumerateArray().Select(h => h.EnumerateObject().ToDictionary(n => n.Name, n => n.Value.ToString()));
             var result = new DictionaryType();
-            foreach (var item in rootValue)
+            foreach (var item in dictionaryValues)
             {
                 //Get the value portion out
                 var valueJson = JsonDocument.Parse(item.Values.Last());

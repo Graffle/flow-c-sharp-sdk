@@ -329,6 +329,30 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Create_DictionaryTypeCadenceJson_ReturnsDictionaryType()
+        {
+            var json = @"[{""key"":{""type"":""UInt8"",""value"":""123""},""value"":{""type"":""String"",""value"":""test""}}]";
+            var result = FlowValueType.Create("Dictionary", json);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(DictionaryType));
+
+            var data = (result as DictionaryType).Data;
+            Assert.IsNotNull(data);
+            Assert.AreEqual(1, data.Keys.Count);
+
+            //verify values
+            var kvp = data.First();
+            var key = kvp.Key;
+            Assert.IsInstanceOfType(key, typeof(UInt8Type));
+            Assert.AreEqual((UInt32)123, ((UInt8Type)key).Data);
+
+            var value = kvp.Value;
+            Assert.IsInstanceOfType(value, typeof(StringType));
+            Assert.AreEqual("test", ((StringType)value).Data);
+        }
+
+        [TestMethod]
         public void Create_ArrayType_ReturnsArrayType()
         {
             var value = new StringType("hello");
