@@ -78,7 +78,7 @@ namespace Graffle.FlowSdk.Types
                 { Constants.INT256_TYPE_NAME, (arg) => new Int256Type(arg) },
                 { Constants.FIX64_TYPE_NAME, (arg) => new Fix64Type(arg) },
                 { Constants.UFIX64_TYPE_NAME, (arg) => new UFix64Type(arg) },
-                { Constants.DICTIONARY_TYPE_NAME, (arg) => new DictionaryType(arg) },
+                { Constants.DICTIONARY_TYPE_NAME, (arg) => arg is string ? DictionaryType.CreateFromCadence(Constants.DICTIONARY_TYPE_NAME, arg) : new DictionaryType(arg) },
                 { Constants.ARRAY_TYPE_NAME, (arg) => arg is string ? ArrayType.CreateFromCadence(Constants.ARRAY_TYPE_NAME, arg) : new ArrayType(arg) },
                 { Constants.BOOL_TYPE_NAME, (arg) => new BoolType(arg) },
                 { Constants.FLOW_TYPE_NAME, (arg) => new FlowType(arg) },
@@ -188,7 +188,7 @@ namespace Graffle.FlowSdk.Types
                 {
                     //If we're going to fail here it will probably be because value's type doesnt match the FlowType's constructor
                     //Wrap this exception so it makes more sense
-                    throw new InvalidOperationException($"Failed to create Flow Value of type {type} ({typeToResolve}) with value {value}", ex);
+                    throw new InvalidOperationException($"Failed to create Flow Value of type {type} ({typeToResolve}) with value {value} ({value.GetType()})", ex);
                 }
             }
             else
