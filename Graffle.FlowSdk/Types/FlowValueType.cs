@@ -175,7 +175,14 @@ namespace Graffle.FlowSdk.Types
             string typeToResolve = splitValues.First();
             if (typeToResolve == Constants.OPTIONAL_TYPE_NAME)
             {
-                return new OptionalType(Create(splitValues.Last(), value));
+                var nestedType = splitValues.Last();
+                if (nestedType == Constants.OPTIONAL_TYPE_NAME)
+                {
+                    //this should never happen but we need to safeguard against stackoverflow regardless
+                    throw new InvalidOperationException($"Could not detect nested type for Optional flow value type {type} and value {value} ({value.GetType()}");
+                }
+
+                return new OptionalType(Create(nestedType, value));
             }
 
             if (typeNameToCtor.TryGetValue(typeToResolve, out var ctor))
