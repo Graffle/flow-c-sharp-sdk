@@ -31,6 +31,15 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void Create_OptionalType_NoNestedType_ThrowsInvalidOperationException()
+        {
+            Assert.ThrowsException<InvalidOperationException>(() =>
+            {
+                FlowValueType.Create("Optional", 123);
+            });
+        }
+
+        [TestMethod]
         public void Create_NullType_ThrowsArgumentNullException()
         {
             Assert.ThrowsException<ArgumentNullException>(() => FlowValueType.Create(null, 1));
