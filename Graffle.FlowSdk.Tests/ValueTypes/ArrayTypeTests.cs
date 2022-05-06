@@ -102,5 +102,61 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var stringType = second as StringType;
             Assert.AreEqual("hello", stringType.Data);
         }
+
+        [TestMethod]
+        [DataRow("Struct")]
+        [DataRow("Resource")]
+        [DataRow("Contract")]
+        [DataRow("Event")]
+        [DataRow("Enum")]
+        public void FromJson_NestedCompositeType_ReturnsArrayType(string nestedCompositeType)
+        {
+            /*
+            {
+                "type":"Array",
+                "value":[
+                    {
+                        "type":"Struct",
+                        "value": {
+                            "id":"structId",
+                            "fields": [
+                                {
+                                    "name":"structField1",
+                                    "value": {
+                                        "type":"Int",
+                                        "value":2
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+            */
+
+            var json = $"{{\"type\":\"Array\",\"value\":[{{\"type\":\"{nestedCompositeType}\",\"value\":{{\"id\":\"structId\",\"fields\":[{{\"name\":\"structField1\",\"value\":{{\"type\":\"Int\",\"value\":\"2\"}}}}]}}}}]}}";
+
+            var arr = ArrayType.FromJson(json);
+
+            var arrItem = arr.Data[0];
+            Assert.IsInstanceOfType(arrItem, typeof(CompositeType));
+
+            var composite = arrItem as CompositeType;
+
+            Assert.AreEqual(nestedCompositeType, composite.Type);
+            Assert.AreEqual("structId", composite.Id);
+
+            var compositeFields = composite.Fields;
+            Assert.AreEqual(1, compositeFields.Count());
+
+            var first = compositeFields.First();
+            Assert.AreEqual("structField1", first.Name);
+
+            var structFieldValue = first.Value;
+            Assert.IsInstanceOfType(structFieldValue, typeof(IntType));
+
+            var intType = structFieldValue as IntType;
+            Assert.AreEqual(2, intType.Data);
+        }
     }
 }
