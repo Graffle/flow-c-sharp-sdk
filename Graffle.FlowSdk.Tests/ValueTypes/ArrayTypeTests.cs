@@ -111,6 +111,29 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [DataRow("Enum")]
         public void FromJson_NestedCompositeType_ReturnsArrayType(string nestedCompositeType)
         {
+            /*
+            {
+                "type":"Array",
+                "value":[
+                    {
+                        "type":"Struct",
+                        "value": {
+                            "id":"structId",
+                            "fields": [
+                                {
+                                    "name":"structField1",
+                                    "value": {
+                                        "type":"Int",
+                                        "value":2
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+            */
+
             var json = $"{{\"type\":\"Array\",\"value\":[{{\"type\":\"{nestedCompositeType}\",\"value\":{{\"id\":\"structId\",\"fields\":[{{\"name\":\"structField1\",\"value\":{{\"type\":\"Int\",\"value\":\"2\"}}}}]}}}}]}}";
 
             var arr = ArrayType.FromJson(json);
