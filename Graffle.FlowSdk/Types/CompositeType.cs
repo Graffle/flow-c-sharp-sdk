@@ -47,6 +47,16 @@ namespace Graffle.FlowSdk.Types
             return result;
         }
 
+        public static CompositeType FromJson(string type, string valueJson)
+        {
+            //compile it back to valid cadence json for the composite type
+            //this can get called from optional type parsing where we're working with the
+            //type and value json separately
+            var json = $"{{\"type\":\"{type}\",\"value\":{valueJson}}}";
+
+            return CompositeType.FromJson(json);
+        }
+
         public static CompositeType FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);

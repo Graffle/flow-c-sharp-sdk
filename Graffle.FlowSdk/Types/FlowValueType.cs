@@ -58,6 +58,11 @@ namespace Graffle.FlowSdk.Types
                 { Constants.ENUM_TYPE_NAME, CompositeType.FromJson },
             };
 
+            /* Note for the "arg is string" syntax below
+               Optional Type parsing from the services SDK will call into here with json rather than fully structured data
+               So if we know we were passed a string then it is json
+               Otherwise it's structured data
+            */
             typeNameToCtor = new Dictionary<string, FlowValueTypeConstructor>()
             {
                 { Constants.ADDRESS_TYPE_NAME, (arg) => new AddressType(arg)},
@@ -88,11 +93,11 @@ namespace Graffle.FlowSdk.Types
                 { Constants.WORD64_TYPE_NAME, (arg) => new Word64Type(arg) },
                 { Constants.PATH_TYPE_NAME, (arg) => new PathType(arg) },
                 { Constants.CAPABILITY_TYPE_NAME, (arg) => new CapabilityType(arg) },
-                { Constants.STRUCT_TYPE_NAME, (arg) => new CompositeType(Constants.STRUCT_TYPE_NAME, arg) },
-                { Constants.RESOURCE_TYPE_NAME, (arg) => new CompositeType(Constants.RESOURCE_TYPE_NAME, arg) },
-                { Constants.EVENT_TYPE_NAME, (arg) => new CompositeType(Constants.EVENT_TYPE_NAME, arg) },
-                { Constants.CONTRACT_TYPE_NAME, (arg) => new CompositeType(Constants.CONTRACT_TYPE_NAME, arg) },
-                { Constants.ENUM_TYPE_NAME, (arg) => new CompositeType(Constants.ENUM_TYPE_NAME, arg) },
+                { Constants.STRUCT_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.STRUCT_TYPE_NAME, arg) : new CompositeType(Constants.STRUCT_TYPE_NAME, arg) },
+                { Constants.RESOURCE_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.RESOURCE_TYPE_NAME, arg) : new CompositeType(Constants.RESOURCE_TYPE_NAME, arg) },
+                { Constants.EVENT_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.EVENT_TYPE_NAME, arg) : new CompositeType(Constants.EVENT_TYPE_NAME, arg) },
+                { Constants.CONTRACT_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.CONTRACT_TYPE_NAME, arg) : new CompositeType(Constants.CONTRACT_TYPE_NAME, arg) },
+                { Constants.ENUM_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.ENUM_TYPE_NAME, arg) : new CompositeType(Constants.ENUM_TYPE_NAME, arg) },
             };
 
             primitiveTypes = new HashSet<string>()
