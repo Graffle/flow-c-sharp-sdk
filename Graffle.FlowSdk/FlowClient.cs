@@ -13,6 +13,14 @@ namespace Graffle.FlowSdk
 {
     public class FlowClient
     {
+        /// <summary>
+        /// GRPC channel options
+        /// </summary>
+        private static readonly List<ChannelOption> GRPC_CHANNEL_OPTIONS = new List<ChannelOption>()
+        {
+             new ChannelOption(ChannelOptions.MaxReceiveMessageLength, -1) //https://grpc.github.io/grpc/core/group__grpc__arg__keys.html#ga813f94f9ac3174571dd712c96cdbbdc1
+        };
+
         private Flow.Access.AccessAPI.AccessAPIClient client;
 
         private FlowClient(Flow.Access.AccessAPI.AccessAPIClient client)
@@ -27,7 +35,7 @@ namespace Graffle.FlowSdk
         /// <returns></returns>
         public static FlowClient Create(string accessNodeURI)
         {
-            var channel = new Channel(accessNodeURI, ChannelCredentials.Insecure);
+            var channel = new Channel(accessNodeURI, ChannelCredentials.Insecure, GRPC_CHANNEL_OPTIONS);
             var client = new Flow.Access.AccessAPI.AccessAPIClient(channel);
             var flowClient = new FlowClient(client);
             return flowClient;
@@ -87,10 +95,11 @@ namespace Graffle.FlowSdk
         public async Task<Flow.Access.AccountResponse> GetAccountAsync(string address, ulong blockHeight)
         {
             var result = await client.GetAccountAtBlockHeightAsync(
-                new Flow.Access.GetAccountAtBlockHeightRequest() { 
-                    BlockHeight = blockHeight, 
-                    Address = address.HexToByteString() 
-            });
+                new Flow.Access.GetAccountAtBlockHeightRequest()
+                {
+                    BlockHeight = blockHeight,
+                    Address = address.HexToByteString()
+                });
             return result;
         }
 
@@ -108,8 +117,10 @@ namespace Graffle.FlowSdk
             return result;
         }
 
-        public async Task<Flow.Entities.Account> GetAccountAtLatestBlockAsync(ByteString address) {
-            var request = new Flow.Access.GetAccountAtLatestBlockRequest(){
+        public async Task<Flow.Entities.Account> GetAccountAtLatestBlockAsync(ByteString address)
+        {
+            var request = new Flow.Access.GetAccountAtLatestBlockRequest()
+            {
                 Address = address
             };
 
@@ -118,10 +129,12 @@ namespace Graffle.FlowSdk
             return accountReponse.Account;
         }
 
-        public async Task<Flow.Entities.Account> GetAccountFromConfigAsync(string name, string filePath = null) {
+        public async Task<Flow.Entities.Account> GetAccountFromConfigAsync(string name, string filePath = null)
+        {
             var flowJsonConfig = Helpers.LoadFlowJson(filePath);
 
-            if(!flowJsonConfig.Accounts.ContainsKey(name)) {
+            if (!flowJsonConfig.Accounts.ContainsKey(name))
+            {
                 throw new Exception($"Could not load account '{name}' from flow.json");
             }
 
@@ -151,8 +164,9 @@ namespace Graffle.FlowSdk
             return account;
         }
 
-        public async Task<Flow.Access.SendTransactionResponse> SendTransactionAsync(Flow.Access.SendTransactionRequest sendTransactionRequest, CallOptions options = new CallOptions()) {
+        public async Task<Flow.Access.SendTransactionResponse> SendTransactionAsync(Flow.Access.SendTransactionRequest sendTransactionRequest, CallOptions options = new CallOptions())
+        {
             return await client.SendTransactionAsync(sendTransactionRequest, options);
-        }      
+        }
     }
 }
