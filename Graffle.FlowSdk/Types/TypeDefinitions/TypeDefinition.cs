@@ -49,6 +49,11 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var value = TypeDefinition.FromJson(root["value"]);
 
                     return new DictionaryTypeDefinition(key, value);
+                case "Reference":
+                    var authorized = Convert.ToBoolean(root["authorized"]);
+                    var type = TypeDefinition.FromJson(root["type"]);
+
+                    return new ReferenceTypeDefinition(authorized, type);
                 //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
                 case "Int":
                 case "Int8":
@@ -109,7 +114,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "Optional":
                 case "VariableSizedArray":
                 case "ConstantSizedArray":
-                case "Reference":
                 default:
                     throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
