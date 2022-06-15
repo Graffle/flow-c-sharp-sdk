@@ -49,7 +49,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var value = TypeDefinition.FromJson(root["value"]);
 
                     return new DictionaryTypeDefinition(key, value);
-                //simple types
+                //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
                 case "Int":
                 case "Int8":
                 case "Int16":
@@ -73,15 +73,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "Bool":
                 case "String":
                 case "Address":
-                    return new SimpleTypeDefinition(kind);
-                // --end simple types
-                //TODO not supported below
-                case "Function":
-                case "Restriction":
-                case "Optional":
-                case "VariableSizedArray":
-                case "ConstantSizedArray":
-                case "Reference":
                 case "Any":
                 case "AnyStruct":
                 case "AnyResource":
@@ -110,8 +101,17 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "DeployedContract":
                 case "AccountKey":
                 case "Block":
+                    return new SimpleTypeDefinition(kind);
+                // --end simple types
+                //TODO not supported below
+                case "Function":
+                case "Restriction":
+                case "Optional":
+                case "VariableSizedArray":
+                case "ConstantSizedArray":
+                case "Reference":
                 default:
-                    throw new NotImplementedException($"Unknown or unsupported type kind {kind}");
+                    throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
         }
     }
