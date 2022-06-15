@@ -67,11 +67,5 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual(kind, simple.Kind);
         }
 
-        [TestMethod]
-        public void CapabilityType_ReturnsCapabilityType()
-        {
-
-        }
-
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,6 +16,12 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
         public abstract string Kind { get; set; }
 
         public abstract string AsJsonCadenceDataFormat();
+
+        /// <summary>
+        /// Flattens the Type Definition and all of its properties into a dictionary of primitive types
+        /// </summary>
+        /// <returns></returns>
+        public abstract Dictionary<string, dynamic> Flatten();
 
         public static TypeDefinition FromJson(string json)
         {
