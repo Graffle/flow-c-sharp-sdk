@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Graffle.FlowSdk.Types.StructuredTypes
 {
     public class SimpleTypeDefinition : TypeDefinition
@@ -12,6 +14,15 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
         public override string AsJsonCadenceDataFormat()
         {
             return $"{{\"kind\":\"{Kind}\"}}";
+        }
+
+        public override Dictionary<string, dynamic> Flatten()
+        {
+            var res = new Dictionary<string, dynamic>();
+
+            res.Add("kind", Kind);
+
+            return res;
         }
     }
 }
