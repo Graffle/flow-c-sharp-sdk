@@ -28,7 +28,6 @@ namespace Graffle.FlowSdk.Tests.ValueTypes.TypeDefinitions
 
         }
 
-
         [TestMethod]
         public void Flatten_HasAllProperties()
         {
