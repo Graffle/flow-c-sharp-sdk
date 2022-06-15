@@ -7,6 +7,15 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
 {
     public class CompositeTypeDefinition : TypeDefinition
     {
+        public CompositeTypeDefinition(string kind, string type, string typeId, IEnumerable<CompositeTypeDefinitionInitializer> initializers, IEnumerable<CompositeTypeDefinitionField> fields)
+        {
+            Kind = kind;
+            Type = type;
+            TypeId = typeId;
+            Fields = fields.ToList();
+            Initializers = initializers.ToList();
+        }
+
         public CompositeTypeDefinition(string kind, Dictionary<string, string> data)
         {
             Kind = kind;
@@ -72,6 +81,42 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
 
                 yield return $"{{\"id\":\"{id}\",\"type\":{typeJson}}}";
             }
+        }
+
+        public override Dictionary<string, dynamic> Flatten()
+        {
+            var res = new Dictionary<string, dynamic>();
+
+            res.Add("kind", Kind);
+            res.Add("type", Type);
+            res.Add("typeID", TypeId);
+
+            var initializers = new List<Dictionary<string, dynamic>>();
+            foreach (var init in Initializers)
+            {
+                var initializerDict = new Dictionary<string, dynamic>();
+
+                initializerDict.Add("label", init.Label);
+                initializerDict.Add("id", init.Id);
+                initializerDict.Add("type", init.Type.Flatten());
+
+                initializers.Add(initializerDict);
+            }
+            res.Add("initializers", initializers);
+
+            var fields = new List<Dictionary<string, dynamic>>();
+            foreach (var field in Fields)
+            {
+                var fieldDict = new Dictionary<string, dynamic>();
+                fieldDict.Add("id", field.Id);
+                fieldDict.Add("type", field.Type.Flatten());
+
+                fields.Add(fieldDict);
+            }
+
+            res.Add("fields", fields);
+
+            return res;
         }
 
         public IEnumerable<string> InitializersAsJson()
