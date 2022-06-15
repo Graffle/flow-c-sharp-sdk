@@ -25,7 +25,6 @@ namespace Graffle.FlowSdk.Tests.ValueTypes.TypeDefinitions
             var json = composite.AsJsonCadenceDataFormat();
 
             Assert.AreEqual(expectedJson, json);
-
         }
 
         [TestMethod]
