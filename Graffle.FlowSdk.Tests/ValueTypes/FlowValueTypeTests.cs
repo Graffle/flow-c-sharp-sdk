@@ -1,5 +1,5 @@
 using Graffle.FlowSdk.Types;
-using Graffle.FlowSdk.Types.StructuredTypes;
+using Graffle.FlowSdk.Types.TypeDefinitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

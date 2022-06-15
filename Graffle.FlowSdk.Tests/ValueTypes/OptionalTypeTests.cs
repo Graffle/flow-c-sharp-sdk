@@ -1,6 +1,6 @@
 using System;
 using Graffle.FlowSdk.Types;
-using Graffle.FlowSdk.Types.StructuredTypes;
+using Graffle.FlowSdk.Types.TypeDefinitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes

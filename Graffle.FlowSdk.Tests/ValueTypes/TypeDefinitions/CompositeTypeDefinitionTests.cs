@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Graffle.FlowSdk.Types;
-using Graffle.FlowSdk.Types.StructuredTypes;
+using Graffle.FlowSdk.Types.TypeDefinitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes.TypeDefinitions

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Graffle.FlowSdk.Types.StructuredTypes
+namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class CompositeTypeDefinitionInitializer
     {

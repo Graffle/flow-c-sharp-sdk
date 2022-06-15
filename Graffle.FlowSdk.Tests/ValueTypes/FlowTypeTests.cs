@@ -1,6 +1,6 @@
 using System;
 using Graffle.FlowSdk.Types;
-using Graffle.FlowSdk.Types.StructuredTypes;
+using Graffle.FlowSdk.Types.TypeDefinitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
@@ -67,5 +67,33 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual(kind, simple.Kind);
         }
 
+        [TestMethod]
+        public void DictionaryType_ReturnsDictionaryType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"UInt16\"}}}}";
+
+            var result = FlowType.FromJson(json);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Type", result.Type);
+
+            var data = result.Data;
+            Assert.IsNotNull(data);
+            Assert.IsInstanceOfType(data, typeof(DictionaryTypeDefinition));
+
+            var dict = data as DictionaryTypeDefinition;
+
+            var key = dict.Key;
+            Assert.IsInstanceOfType(key, typeof(SimpleTypeDefinition));
+
+            var simpleKey = key as SimpleTypeDefinition;
+            Assert.AreEqual("String", key.Kind);
+
+            var value = dict.Value;
+            Assert.IsInstanceOfType(value, typeof(SimpleTypeDefinition));
+
+            var simpleValue = value as SimpleTypeDefinition;
+
+            Assert.AreEqual("UInt16", simpleValue.Kind);
+        }
     }
 }
