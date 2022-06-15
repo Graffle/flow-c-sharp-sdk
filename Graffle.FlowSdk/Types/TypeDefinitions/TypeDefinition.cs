@@ -111,7 +111,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "ConstantSizedArray":
                 case "Reference":
                 default:
-                    throw new NotImplementedException($"Unknown or unsupported type kind {kind}");
+                    throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
         }
     }
