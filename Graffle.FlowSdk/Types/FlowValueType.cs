@@ -86,7 +86,7 @@ namespace Graffle.FlowSdk.Types
                 { Constants.DICTIONARY_TYPE_NAME, (arg) => arg is string ? DictionaryType.CreateFromCadence(Constants.DICTIONARY_TYPE_NAME, arg) : new DictionaryType(arg) },
                 { Constants.ARRAY_TYPE_NAME, (arg) => arg is string ? ArrayType.CreateFromCadence(Constants.ARRAY_TYPE_NAME, arg) : new ArrayType(arg) },
                 { Constants.BOOL_TYPE_NAME, (arg) => new BoolType(arg) },
-                { Constants.FLOW_TYPE_NAME, (arg) => new FlowType(arg) },
+                { Constants.FLOW_TYPE_NAME, (arg) => arg is string ? FlowType.FromJson(arg) : new FlowType(arg) },
                 { Constants.WORD8_TYPE_NAME, (arg) => new Word8Type(arg) },
                 { Constants.WORD16_TYPE_NAME, (arg) => new Word16Type(arg) },
                 { Constants.WORD32_TYPE_NAME, (arg) => new Word32Type(arg) },

@@ -1,4 +1,5 @@
 using Graffle.FlowSdk.Types;
+using Graffle.FlowSdk.Types.StructuredTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -470,14 +471,21 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void Create_FlowType_ReturnsFlowType()
         {
-            var expectedData = "A.ca4ee530dafff8ad.Evolution.NFT";
+            var typeJson = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Resource\",\"typeID\":\"A.ff68241f0f4fd521.DrSeuss.NFT\",\"fields\":[{\"id\":\"uuid\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"id\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"mintNumber\",\"type\":{\"kind\":\"UInt32\"}},{\"id\":\"contentCapability\",\"type\":{\"kind\":\"Capability\",\"type\":\"\"}},{\"id\":\"contentId\",\"type\":{\"kind\":\"String\"}}],\"initializers\":[],\"type\":\"\"}}}";
 
-            var result = FlowValueType.Create("Type", expectedData);
+            var result = FlowValueType.Create("Type", typeJson);
 
             Assert.IsInstanceOfType(result, typeof(FlowType));
 
-            var resultData = (result as FlowType).Data;
-            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", resultData);
+            Assert.IsNotNull(result);
+
+            var flowType = result as FlowType;
+            Assert.AreEqual("Type", flowType.Type);
+
+            var data = flowType.Data;
+            Assert.IsNotNull(data);
+
+            Assert.IsInstanceOfType(data, typeof(CompositeTypeDefinition));
         }
 
         [TestMethod]

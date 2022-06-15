@@ -1,12 +1,16 @@
+using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Graffle.FlowSdk.Types.StructuredTypes;
 
 namespace Graffle.FlowSdk.Types
 {
-    public class FlowType : FlowValueType<string>
+    public class FlowType : FlowValueType
     {
-        public FlowType(string value) : base(value)
+        public FlowType(TypeDefinition staticType)
         {
+            Data = staticType;
         }
 
         public static FlowType FromJson(string json)
@@ -20,16 +24,29 @@ namespace Graffle.FlowSdk.Types
                 jsonElement = parsedJson.RootElement;
             }
 
-            var staticType = jsonElement.GetProperty("staticType").ToString();
-            var result = new FlowType(staticType);
-            return result;
+            var staticTypeJson = jsonElement.GetProperty("staticType").GetRawText();
+            var data = TypeDefinition.FromJson(staticTypeJson);
+
+            return new FlowType(data);
         }
 
         [JsonPropertyName("type")]
         public override string Type
                     => Constants.FLOW_TYPE_NAME;
 
+        [JsonPropertyName("data")]
+        public TypeDefinition Data { get; set; }
+
         public override string AsJsonCadenceDataFormat()
-            => $"{{\"type\":\"{Type}\",\"value\":{{\"staticType\":\"{Data}\"}}}}";
+        {
+            var dataJson = Data.AsJsonCadenceDataFormat();
+
+            return $"{{\"type\":\"{Type}\",\"value\":{{\"staticType\":{dataJson}}}}}";
+        }
+
+        public override string DataAsJson()
+        {
+            return Data.AsJsonCadenceDataFormat();
+        }
     }
 }
