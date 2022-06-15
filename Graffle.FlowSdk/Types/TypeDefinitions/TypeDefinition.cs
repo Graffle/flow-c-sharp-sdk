@@ -10,18 +10,10 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
     /// Base class for Type Definitions
     /// https://docs.onflow.org/cadence/json-cadence-spec/#type-value
     /// </summary>
-    public abstract class TypeDefinition
+    public abstract class TypeDefinition : TypeDefinitionBase
     {
         [JsonPropertyName("kind")]
         public abstract string Kind { get; }
-
-        public abstract string AsJsonCadenceDataFormat();
-
-        /// <summary>
-        /// Flattens the Type Definition and all of its properties into a dictionary of primitive types
-        /// </summary>
-        /// <returns></returns>
-        public abstract Dictionary<string, dynamic> Flatten();
 
         public static TypeDefinition FromJson(string json)
         {
@@ -39,7 +31,33 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "StructInterface":
                 case "ResourceInterface":
                 case "ContractInterface":
-                    return new CompositeTypeDefinition(kind, root);
+                    var typeId = root["typeID"];
+
+                    var initializersJson = root["initializers"];
+                    var parsedInitializers = JsonDocument.Parse(initializersJson);
+                    var initializersArr = parsedInitializers.RootElement.EnumerateArray();
+
+                    List<InitializerTypeDefinition> initializers = new List<InitializerTypeDefinition>();
+                    foreach (var init in initializersArr)
+                    {
+                        var initJson = init.GetRawText();
+                        var initType = InitializerTypeDefinition.FromJson(initJson);
+                        initializers.Add(initType);
+                    }
+
+                    var fieldsJson = root["fields"];
+                    var parsedFields = JsonDocument.Parse(fieldsJson);
+                    var fieldsArr = parsedFields.RootElement.EnumerateArray();
+
+                    List<FieldTypeDefinition> fields = new List<FieldTypeDefinition>();
+                    foreach (var field in fieldsArr)
+                    {
+                        var fieldJson = field.GetRawText();
+                        var fieldType = FieldTypeDefinition.FromJson(fieldJson);
+                        fields.Add(fieldType);
+                    }
+
+                    return new CompositeTypeDefinition(kind, typeId, initializers, fields);
                 case "Capability":
                     var innerTypeJson = root.FirstOrDefault(x => x.Key == "type").Value.ToString();
                     var innerType = innerTypeJson == string.Empty ? null : TypeDefinition.FromJson(innerTypeJson);
@@ -54,6 +72,27 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var type = TypeDefinition.FromJson(root["type"]);
 
                     return new ReferenceTypeDefinition(authorized, type);
+                case "Optional":
+                    var optionalType = TypeDefinition.FromJson(root["type"]);
+                    return new OptionalTypeDefinition(optionalType);
+                case "Restriction":
+                    var topLevelType = TypeDefinition.FromJson(root["type"]);
+                    var typeIda = root["typeID"];
+
+                    var restrictionsJson = root["restrictions"];
+
+                    var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
+                    var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
+                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
+                    foreach (var r in restrictionsArr)
+                    {
+                        var tmpJson = r.GetRawText();
+                        var tmpRestriction = TypeDefinition.FromJson(tmpJson);
+                        restrictionList.Add(tmpRestriction);
+                    }
+
+                    return new RestrictedTypeDefinition(typeIda, topLevelType, restrictionList);
+
                 //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
                 case "Int":
                 case "Int8":
@@ -110,8 +149,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 // --end simple types
                 //TODO not supported below
                 case "Function":
-                case "Restriction":
-                case "Optional":
                 case "VariableSizedArray":
                 case "ConstantSizedArray":
                 default:
