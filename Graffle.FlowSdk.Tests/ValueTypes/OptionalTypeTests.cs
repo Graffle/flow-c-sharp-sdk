@@ -1,5 +1,6 @@
 using System;
 using Graffle.FlowSdk.Types;
+using Graffle.FlowSdk.Types.StructuredTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Graffle.FlowSdk.Tests.ValueTypes
@@ -175,19 +176,21 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         [TestMethod]
         public void FromJson_WithNestedType_CreatesOptionalType()
         {
-            var json = @"{""type"":""Optional"",""value"":{""type"":""Type"",""value"":{""staticType"":""A.ca4ee530dafff8ad.Evolution.NFT""}}}";
+            var json = "{\"type\":\"Optional\",\"value\":{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"UInt8\"}}}}";
 
             var result = OptionalType.FromJson(json);
 
             Assert.IsInstanceOfType(result, typeof(OptionalType));
-
             var opt = result as OptionalType;
 
             Assert.IsInstanceOfType(opt.Data, typeof(FlowType));
-
             var type = opt.Data as FlowType;
 
-            Assert.AreEqual("A.ca4ee530dafff8ad.Evolution.NFT", type.Data);
+            var typeData = type.Data;
+
+            Assert.IsInstanceOfType(typeData, typeof(SimpleTypeDefinition));
+
+            Assert.AreEqual("UInt8", typeData.Kind);
         }
     }
 }
