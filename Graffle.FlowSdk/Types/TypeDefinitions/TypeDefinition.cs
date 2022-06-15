@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Graffle.FlowSdk.Types.StructuredTypes
+namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     /// <summary>
     /// Base class for Type Definitions
@@ -13,7 +13,7 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
     public abstract class TypeDefinition
     {
         [JsonPropertyName("kind")]
-        public abstract string Kind { get; set; }
+        public abstract string Kind { get; }
 
         public abstract string AsJsonCadenceDataFormat();
 
@@ -44,6 +44,11 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
                     var innerTypeJson = root.FirstOrDefault(x => x.Key == "type").Value.ToString();
                     var innerType = innerTypeJson == string.Empty ? null : TypeDefinition.FromJson(innerTypeJson);
                     return new CapabilityTypeDefinition(kind, innerType);
+                case "Dictionary":
+                    var key = TypeDefinition.FromJson(root["key"]);
+                    var value = TypeDefinition.FromJson(root["value"]);
+
+                    return new DictionaryTypeDefinition(key, value);
                 //simple types
                 case "Int":
                 case "Int8":
@@ -75,7 +80,6 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
                 case "Restriction":
                 case "Optional":
                 case "VariableSizedArray":
-                case "Dictionary":
                 case "ConstantSizedArray":
                 case "Reference":
                 case "Any":

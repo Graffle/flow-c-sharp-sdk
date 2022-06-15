@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Graffle.FlowSdk.Types.StructuredTypes
+namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class SimpleTypeDefinition : TypeDefinition
     {
@@ -9,7 +9,7 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
             Kind = kind;
         }
 
-        public override string Kind { get; set; }
+        public override string Kind { get; }
 
         public override string AsJsonCadenceDataFormat()
         {

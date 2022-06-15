@@ -1,8 +1,6 @@
-using System;
-using System.Linq;
+using Graffle.FlowSdk.Types.TypeDefinitions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Graffle.FlowSdk.Types.StructuredTypes;
 
 namespace Graffle.FlowSdk.Types
 {

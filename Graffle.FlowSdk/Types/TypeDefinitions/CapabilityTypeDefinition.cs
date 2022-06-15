@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
 
-namespace Graffle.FlowSdk.Types.StructuredTypes
+namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class CapabilityTypeDefinition : TypeDefinition
     {
@@ -12,7 +13,7 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
         }
 
         [JsonPropertyName("kind")]
-        public override string Kind { get; set; }
+        public override string Kind { get; }
 
         [JsonPropertyName("type")]
         public TypeDefinition Type { get; set; }

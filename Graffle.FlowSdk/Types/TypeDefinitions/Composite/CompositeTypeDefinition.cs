@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Graffle.FlowSdk.Types.StructuredTypes
+namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class CompositeTypeDefinition : TypeDefinition
     {
@@ -47,7 +47,7 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
         }
 
         [JsonPropertyName("kind")]
-        public override string Kind { get; set; }
+        public override string Kind { get; }
 
         [JsonPropertyName("type")]
         public string Type { get; set; }
