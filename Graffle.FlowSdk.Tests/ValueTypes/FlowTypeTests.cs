@@ -95,5 +95,29 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.AreEqual("UInt16", simpleValue.Kind);
         }
+
+        [TestMethod]
+        public void ReferenceType_ReturnsReferenceType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Reference\",\"authorized\":true,\"type\":{\"kind\":\"String\"}}}}";
+
+            var result = FlowType.FromJson(json);
+
+            Assert.IsNotNull(result);
+
+            var data = result.Data;
+
+            var reference = data as ReferenceTypeDefinition;
+
+            Assert.AreEqual(true, reference.Authorized);
+            Assert.AreEqual("Reference", data.Kind);
+
+            var type = reference.Type;
+
+            Assert.IsInstanceOfType(type, typeof(SimpleTypeDefinition));
+            var simple = type as SimpleTypeDefinition;
+
+            Assert.AreEqual("String", simple.Kind);
+        }
     }
 }
