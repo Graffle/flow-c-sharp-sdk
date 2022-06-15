@@ -100,7 +100,7 @@ namespace Graffle.FlowSdk.Types.StructuredTypes
                 case "AccountKey":
                 case "Block":
                 default:
-                    throw new NotImplementedException($"Unknown type kind {kind}");
+                    throw new NotImplementedException($"Unknown or unsupported type kind {kind}");
             }
         }
     }
