@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Graffle.FlowSdk.Types;
 using Graffle.FlowSdk.Types.TypeDefinitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -120,8 +121,25 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.AreEqual("String", simple.Kind);
         }
 
-        // [TestMethod]
-        // public void OptionalType
+        [TestMethod]
+        public void OptionalType_ReturnsOptionalType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Optional\",\"type\":{\"kind\":\"String\"}}}}";
+
+            var result = FlowType.FromJson(json);
+
+            var data = result.Data;
+
+            var opt = data as OptionalTypeDefinition;
+            Assert.IsNotNull(opt);
+
+            Assert.AreEqual("Optional", opt.Kind);
+
+            var type = opt.Type;
+
+            var simple = type as SimpleTypeDefinition;
+            Assert.AreEqual("String", simple.Kind);
+        }
 
         [TestMethod]
         public void RestrictedType_ReturnsRestrictedType()
@@ -129,6 +147,30 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Restriction\",\"typeID\":\"0x3.GreatContract.GreatNFT\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[{\"kind\":\"String\"}]}}}";
 
             var result = FlowType.FromJson(json);
+
+            var data = result.Data;
+
+            var restricted = data as RestrictedTypeDefinition;
+
+            Assert.AreEqual(data.Kind, "Restriction");
+
+            Assert.AreEqual("0x3.GreatContract.GreatNFT", restricted.TypeId);
+
+            var type = restricted.Type;
+
+            var simple = type as SimpleTypeDefinition;
+            Assert.IsNotNull(simple);
+
+            Assert.AreEqual("AnyResource", simple.Kind);
+
+            Assert.AreEqual(1, restricted.Restrictions.Count());
+
+            var actualRestriction = restricted.Restrictions[0];
+
+            var simpleRestriction = actualRestriction as SimpleTypeDefinition;
+            Assert.IsNotNull(simpleRestriction);
+
+            Assert.AreEqual("String", simpleRestriction.Kind);
         }
     }
 }
