@@ -119,5 +119,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.AreEqual("String", simple.Kind);
         }
+
+        // [TestMethod]
+        // public void OptionalType
+
+        [TestMethod]
+        public void RestrictedType_ReturnsRestrictedType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Restriction\",\"typeID\":\"0x3.GreatContract.GreatNFT\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[{\"kind\":\"String\"}]}}}";
+
+            var result = FlowType.FromJson(json);
+        }
     }
 }
