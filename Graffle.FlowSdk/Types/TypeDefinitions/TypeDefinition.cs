@@ -10,13 +10,21 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
     /// Base class for Type Definitions
     /// https://docs.onflow.org/cadence/json-cadence-spec/#type-value
     /// </summary>
-    public abstract class TypeDefinition : TypeDefinitionBase
+    public abstract class TypeDefinition : ITypeDefinition
     {
         [JsonPropertyName("kind")]
         public abstract string Kind { get; }
 
+        public abstract Dictionary<string, dynamic> Flatten();
+
+        public abstract string AsJsonCadenceDataFormat();
+
         public static TypeDefinition FromJson(string json)
         {
+            /*  TODO:
+                All of this logic should really be contained within each TypeDefinition implementation
+                and ITypeDefinition should expose a FromJson(string) function
+            */
             var parsedJson = JsonDocument.Parse(json);
             var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value.ToString());
 
@@ -34,34 +42,16 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var typeId = root["typeID"];
 
                     var initializersJson = root["initializers"];
-                    var parsedInitializers = JsonDocument.Parse(initializersJson);
-                    var initializersArr = parsedInitializers.RootElement.EnumerateArray();
-
-                    List<InitializerTypeDefinition> initializers = new List<InitializerTypeDefinition>();
-                    foreach (var init in initializersArr)
-                    {
-                        var initJson = init.GetRawText();
-                        var initType = InitializerTypeDefinition.FromJson(initJson);
-                        initializers.Add(initType);
-                    }
+                    var compositeInitializers = GetInitializersFromJson(initializersJson);
 
                     var fieldsJson = root["fields"];
-                    var parsedFields = JsonDocument.Parse(fieldsJson);
-                    var fieldsArr = parsedFields.RootElement.EnumerateArray();
+                    var compositeFields = GetFieldsFromJson(fieldsJson);
 
-                    List<FieldTypeDefinition> fields = new List<FieldTypeDefinition>();
-                    foreach (var field in fieldsArr)
-                    {
-                        var fieldJson = field.GetRawText();
-                        var fieldType = FieldTypeDefinition.FromJson(fieldJson);
-                        fields.Add(fieldType);
-                    }
-
-                    return new CompositeTypeDefinition(kind, typeId, initializers, fields);
+                    return new CompositeTypeDefinition(kind, typeId, compositeInitializers, compositeFields);
                 case "Capability":
-                    var innerTypeJson = root.FirstOrDefault(x => x.Key == "type").Value.ToString();
-                    var innerType = innerTypeJson == string.Empty ? null : TypeDefinition.FromJson(innerTypeJson);
-                    return new CapabilityTypeDefinition(kind, innerType);
+                    var capabilityTypeJson = root["type"];
+                    var capabilityType = capabilityTypeJson == string.Empty ? null : TypeDefinition.FromJson(capabilityTypeJson);
+                    return new CapabilityTypeDefinition(kind, capabilityType);
                 case "Dictionary":
                     var key = TypeDefinition.FromJson(root["key"]);
                     var value = TypeDefinition.FromJson(root["value"]);
@@ -76,14 +66,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var optionalType = TypeDefinition.FromJson(root["type"]);
                     return new OptionalTypeDefinition(optionalType);
                 case "Restriction":
-                    var topLevelType = TypeDefinition.FromJson(root["type"]);
-                    var typeIda = root["typeID"];
+                    var restrictionType = TypeDefinition.FromJson(root["type"]);
+                    var restrictionTypeId = root["typeID"];
 
+                    //todo this can be a function
                     var restrictionsJson = root["restrictions"];
-
                     var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
                     var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
-                    List<dynamic> restrictionList = new List<dynamic>();
+                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
                     foreach (var r in restrictionsArr)
                     {
                         if (r.ValueKind == JsonValueKind.Object)
@@ -92,15 +82,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                             var tmpRestriction = TypeDefinition.FromJson(tmpJson);
                             restrictionList.Add(tmpRestriction);
                         }
-                        else
+                        else //todo fix this: workaround for non-json object in restriction array
                         {
                             var tmp = new SimpleTypeDefinition(r.GetRawText());
                             restrictionList.Add(tmp);
                         }
                     }
 
-                    return new RestrictedTypeDefinition(typeIda, topLevelType, restrictionList);
-                //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
+                    return new RestrictedTypeDefinition(restrictionTypeId, restrictionType, restrictionList);
                 case "VariableSizedArray":
                     var variableArrayType = TypeDefinition.FromJson(root["type"]);
 
@@ -110,6 +99,19 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var size = Convert.ToUInt64(root["size"]);
 
                     return new ConstantSizedArrayTypeDefinition(constantArrayType, size);
+                case "Enum":
+                    var enumType = TypeDefinition.FromJson(root["type"]);
+                    var enumTypeId = root["typeID"];
+
+                    var enumFieldJson = root["fields"];
+                    var enumFields = GetFieldsFromJson(enumFieldJson);
+
+                    var enumInitializerJson = root["initializers"];
+                    var enumInitializers = GetInitializersFromJson(enumInitializerJson);
+
+                    return new EnumTypeDefinition(enumType, enumTypeId, enumFields, enumInitializers);
+
+                //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
                 case "Int":
                 case "Int8":
                 case "Int16":
@@ -168,6 +170,40 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 default:
                     throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
+        }
+
+        //TODO these two functions can be simplified into a single generic function
+        //do this when adding FromJson to ITypeDefinition
+        private static List<FieldTypeDefinition> GetFieldsFromJson(string json)
+        {
+            List<FieldTypeDefinition> res = new List<FieldTypeDefinition>();
+
+            var parsedJson = JsonDocument.Parse(json);
+            var jsonArr = parsedJson.RootElement.EnumerateArray();
+            foreach (var item in jsonArr)
+            {
+                var tmpJson = item.GetRawText();
+                var field = FieldTypeDefinition.FromJson(tmpJson);
+                res.Add(field);
+            }
+
+            return res;
+        }
+
+        private static List<InitializerTypeDefinition> GetInitializersFromJson(string json)
+        {
+            List<InitializerTypeDefinition> res = new List<InitializerTypeDefinition>();
+
+            var parsedJson = JsonDocument.Parse(json);
+            var jsonArr = parsedJson.RootElement.EnumerateArray();
+            foreach (var item in jsonArr)
+            {
+                var tmpJson = item.GetRawText();
+                var initializer = InitializerTypeDefinition.FromJson(tmpJson);
+                res.Add(initializer);
+            }
+
+            return res;
         }
     }
 }
