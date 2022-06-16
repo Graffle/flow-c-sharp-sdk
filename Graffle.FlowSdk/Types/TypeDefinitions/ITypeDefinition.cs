@@ -10,6 +10,10 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
         /// <returns></returns>
         Dictionary<string, dynamic> Flatten();
 
+        /// <summary>
+        /// Returns this object and its properties in Cadence Json format
+        /// </summary>
+        /// <returns></returns>
         string AsJsonCadenceDataFormat();
     }
 }
