@@ -254,5 +254,33 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.IsNotNull(initializers);
             Assert.AreEqual(0, initializers.Count());
         }
+
+        [TestMethod]
+        public void FunctionType_ReturnsFunctionType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Function\",\"typeID\":\"foo\",\"parameters\":[{\"label\":\"foo\",\"id\":\"bar\",\"type\":{\"kind\":\"String\"}}],\"return\":{\"kind\":\"String\"}}}}";
+
+            var res = FlowType.FromJson(json);
+
+            var data = res.Data;
+            Assert.AreEqual("Function", data.Kind);
+            Assert.IsInstanceOfType(data, typeof(FunctionTypeDefinition));
+
+            var function = data as FunctionTypeDefinition;
+            Assert.AreEqual("foo", function.TypeId);
+
+            Assert.IsInstanceOfType(function.Return, typeof(SimpleTypeDefinition));
+            var returnType = function.Return as SimpleTypeDefinition;
+            Assert.AreEqual("String", returnType.Kind);
+
+            Assert.AreEqual(1, function.Parameters.Count);
+            var funcParam = function.Parameters.First();
+            Assert.AreEqual("foo", funcParam.Label);
+            Assert.AreEqual("bar", funcParam.Id);
+
+            Assert.IsInstanceOfType(funcParam.Type, typeof(SimpleTypeDefinition));
+            var funcParamType = funcParam.Type as SimpleTypeDefinition;
+            Assert.AreEqual("String", funcParamType.Kind);
+        }
     }
 }

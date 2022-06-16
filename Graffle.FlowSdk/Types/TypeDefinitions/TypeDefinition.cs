@@ -110,7 +110,12 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var enumInitializers = GetInitializersFromJson(enumInitializerJson);
 
                     return new EnumTypeDefinition(enumType, enumTypeId, enumFields, enumInitializers);
+                case "Function":
+                    var functionTypeId = root["typeID"];
+                    var returnType = TypeDefinition.FromJson(root["return"]);
+                    var functionParameters = GetParametersFromJson(root["parameters"]);
 
+                    return new FunctionTypeDefinition(functionTypeId, functionParameters, returnType);
                 //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
                 case "Int":
                 case "Int8":
@@ -165,8 +170,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "Block":
                     return new SimpleTypeDefinition(kind);
                 // --end simple types
-                //TODO not supported below
-                case "Function":
                 default:
                     throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
@@ -201,6 +204,22 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 var tmpJson = item.GetRawText();
                 var initializer = InitializerTypeDefinition.FromJson(tmpJson);
                 res.Add(initializer);
+            }
+
+            return res;
+        }
+
+        private static List<ParameterTypeDefinition> GetParametersFromJson(string json)
+        {
+            List<ParameterTypeDefinition> res = new List<ParameterTypeDefinition>();
+
+            var parsedJson = JsonDocument.Parse(json);
+            var jsonArr = parsedJson.RootElement.EnumerateArray();
+            foreach (var item in jsonArr)
+            {
+                var tmpJson = item.GetRawText();
+                var parameter = ParameterTypeDefinition.FromJson(tmpJson);
+                res.Add(parameter);
             }
 
             return res;
