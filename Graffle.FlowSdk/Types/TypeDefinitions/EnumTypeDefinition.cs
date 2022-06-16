@@ -22,18 +22,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public List<InitializerTypeDefinition> Initializers { get; set; }
 
-        public IEnumerable<string> FieldsAsJson()
-        {
-            foreach (var f in Fields)
-                yield return f.AsJsonCadenceDataFormat();
-        }
-
-        public IEnumerable<string> InitializersAsJson()
-        {
-            foreach (var i in Initializers)
-                yield return i.AsJsonCadenceDataFormat();
-        }
-
         public override string AsJsonCadenceDataFormat()
         {
             var fields = FieldsAsJson();
@@ -67,6 +55,18 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             res.Add("initializers", flatInitializers);
 
             return res;
+        }
+
+        private IEnumerable<string> FieldsAsJson()
+        {
+            foreach (var f in Fields)
+                yield return f.AsJsonCadenceDataFormat();
+        }
+
+        private IEnumerable<string> InitializersAsJson()
+        {
+            foreach (var i in Initializers)
+                yield return i.AsJsonCadenceDataFormat();
         }
     }
 }
