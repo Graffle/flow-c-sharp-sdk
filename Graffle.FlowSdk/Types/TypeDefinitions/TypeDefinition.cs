@@ -83,12 +83,20 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
                     var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
                     var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
-                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
+                    List<dynamic> restrictionList = new List<dynamic>();
                     foreach (var r in restrictionsArr)
                     {
-                        var tmpJson = r.GetRawText();
-                        var tmpRestriction = TypeDefinition.FromJson(tmpJson);
-                        restrictionList.Add(tmpRestriction);
+                        if (r.ValueKind == JsonValueKind.Object)
+                        {
+                            var tmpJson = r.GetRawText();
+                            var tmpRestriction = TypeDefinition.FromJson(tmpJson);
+                            restrictionList.Add(tmpRestriction);
+                        }
+                        else
+                        {
+                            var tmp = new SimpleTypeDefinition(r.GetRawText());
+                            restrictionList.Add(tmp);
+                        }
                     }
 
                     return new RestrictedTypeDefinition(typeIda, topLevelType, restrictionList);

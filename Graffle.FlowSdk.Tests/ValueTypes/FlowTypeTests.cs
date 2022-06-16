@@ -172,5 +172,14 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.AreEqual("String", simpleRestriction.Kind);
         }
+
+        [TestMethod]
+        public void a()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Resource\",\"typeID\":\"A.9d21537544d9123d.Momentables.NFT\",\"fields\":[{\"id\":\"uuid\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"id\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"momentableId\",\"type\":{\"kind\":\"String\"}},{\"id\":\"name\",\"type\":{\"kind\":\"String\"}},{\"id\":\"description\",\"type\":{\"kind\":\"String\"}},{\"id\":\"imageCID\",\"type\":{\"kind\":\"String\"}},{\"id\":\"directoryPath\",\"type\":{\"kind\":\"String\"}},{\"id\":\"traits\",\"type\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"String\"}}}},{\"id\":\"creator\",\"type\":{\"kind\":\"Struct\",\"typeID\":\"A.9d21537544d9123d.Momentables.Creator\",\"fields\":[{\"id\":\"creatorName\",\"type\":{\"kind\":\"String\"}},{\"id\":\"creatorWallet\",\"type\":{\"kind\":\"Capability\",\"type\":{\"kind\":\"Reference\",\"type\":{\"kind\":\"Restriction\",\"typeID\":\"AnyResource{A.f233dcee88fe0abe.FungibleToken.Receiver}\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[{\"kind\":\"ResourceInterface\",\"typeID\":\"A.f233dcee88fe0abe.FungibleToken.Receiver\",\"fields\":[{\"id\":\"uuid\",\"type\":{\"kind\":\"UInt64\"}}],\"initializers\":[],\"type\":\"\"}]},\"authorized\":false}}},{\"id\":\"creatorRoyalty\",\"type\":{\"kind\":\"UFix64\"}}],\"initializers\":[],\"type\":\"\"}},{\"id\":\"collaborators\",\"type\":{\"kind\":\"VariableSizedArray\",\"type\":{\"kind\":\"Struct\",\"typeID\":\"A.9d21537544d9123d.Momentables.Collaborator\",\"fields\":[{\"id\":\"collaboratorName\",\"type\":{\"kind\":\"String\"}},{\"id\":\"collaboratorWallet\",\"type\":{\"kind\":\"Capability\",\"type\":{\"kind\":\"Reference\",\"type\":{\"kind\":\"Restriction\",\"typeID\":\"AnyResource{A.f233dcee88fe0abe.FungibleToken.Receiver}\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[\"A.f233dcee88fe0abe.FungibleToken.Receiver\"]},\"authorized\":false}}},{\"id\":\"collaboratorRoyalty\",\"type\":{\"kind\":\"UFix64\"}}],\"initializers\":[],\"type\":\"\"}}},{\"id\":\"momentableCollectionDetails\",\"type\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"String\"}}}],\"initializers\":[],\"type\":\"\"}}}";
+            var x = FlowType.FromJson(json);
+
+            var y = x.Data.Flatten();
+        }
     }
 }
