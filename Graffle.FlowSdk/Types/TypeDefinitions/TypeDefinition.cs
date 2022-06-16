@@ -92,8 +92,16 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     }
 
                     return new RestrictedTypeDefinition(typeIda, topLevelType, restrictionList);
-
                 //simple types https://docs.onflow.org/cadence/json-cadence-spec/#simple-types
+                case "VariableSizedArray":
+                    var variableArrayType = TypeDefinition.FromJson(root["type"]);
+
+                    return new VariableSizedArrayDefinition(variableArrayType);
+                case "ConstantSizedArray":
+                    var constantArrayType = TypeDefinition.FromJson(root["type"]);
+                    var size = Convert.ToUInt64(root["size"]);
+
+                    return new ConstantSizedArrayTypeDefinition(constantArrayType, size);
                 case "Int":
                 case "Int8":
                 case "Int16":
@@ -149,8 +157,6 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 // --end simple types
                 //TODO not supported below
                 case "Function":
-                case "VariableSizedArray":
-                case "ConstantSizedArray":
                 default:
                     throw new NotImplementedException($"Unknown or unsupported type {kind}");
             }
