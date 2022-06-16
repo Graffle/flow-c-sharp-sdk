@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
-    public class InitializerTypeDefinition : TypeDefinitionBase
+    public class InitializerTypeDefinition : ITypeDefinition
     {
         public InitializerTypeDefinition(string label, string id, TypeDefinition type)
         {
@@ -17,12 +17,12 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
         public string Id { get; set; }
         public TypeDefinition Type { get; set; }
 
-        public override string AsJsonCadenceDataFormat()
+        public string AsJsonCadenceDataFormat()
         {
             return $"{{\"label\":\"{Label}\",\"id\":\"{Id}\",\"type\":{Type.AsJsonCadenceDataFormat()}}}";
         }
 
-        public override Dictionary<string, dynamic> Flatten()
+        public Dictionary<string, dynamic> Flatten()
         {
             var res = new Dictionary<string, dynamic>();
 

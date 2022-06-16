@@ -10,10 +10,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
     /// Base class for Type Definitions
     /// https://docs.onflow.org/cadence/json-cadence-spec/#type-value
     /// </summary>
-    public abstract class TypeDefinition : TypeDefinitionBase
+    public abstract class TypeDefinition : ITypeDefinition
     {
         [JsonPropertyName("kind")]
         public abstract string Kind { get; }
+
+        public abstract Dictionary<string, dynamic> Flatten();
+
+        public abstract string AsJsonCadenceDataFormat();
 
         public static TypeDefinition FromJson(string json)
         {
