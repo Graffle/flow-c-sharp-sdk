@@ -83,7 +83,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
                     var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
                     var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
-                    List<dynamic> restrictionList = new List<dynamic>();
+                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
                     foreach (var r in restrictionsArr)
                     {
                         if (r.ValueKind == JsonValueKind.Object)
@@ -92,7 +92,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                             var tmpRestriction = TypeDefinition.FromJson(tmpJson);
                             restrictionList.Add(tmpRestriction);
                         }
-                        else
+                        else //todo fix this: workaround for non-json object in restriction array
                         {
                             var tmp = new SimpleTypeDefinition(r.GetRawText());
                             restrictionList.Add(tmp);
