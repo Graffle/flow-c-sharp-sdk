@@ -20,7 +20,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public override string AsJsonCadenceDataFormat()
         {
-            var typeJson = Type?.AsJsonCadenceDataFormat() ?? $"\"\""; //just double quotes if no type
+            var typeJson = Type?.AsJsonCadenceDataFormat() ?? "\"\""; //just double quotes if no type
 
             return $"{{\"kind\":\"{Kind}\",\"type\":{typeJson}}}";
         }
