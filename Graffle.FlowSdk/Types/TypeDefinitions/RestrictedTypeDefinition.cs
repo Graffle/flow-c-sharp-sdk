@@ -38,9 +38,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             List<Dictionary<string, dynamic>> restrictions = new List<Dictionary<string, dynamic>>();
             foreach (var r in Restrictions)
             {
-
                 restrictions.Add(r.Flatten());
-
             }
             res.Add("restrictions", restrictions);
 
