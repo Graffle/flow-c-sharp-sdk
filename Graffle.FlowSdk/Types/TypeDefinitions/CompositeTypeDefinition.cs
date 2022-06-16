@@ -58,7 +58,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             }
         }
 
-        public override Dictionary<string, dynamic> Flatten()
+        public override dynamic Flatten()
         {
             var res = new Dictionary<string, dynamic>();
 
@@ -66,14 +66,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             res.Add("type", Type);
             res.Add("typeID", TypeId);
 
-            var initializers = new List<Dictionary<string, dynamic>>();
+            var initializers = new List<dynamic>();
             foreach (var init in Initializers)
             {
                 initializers.Add(init.Flatten());
             }
             res.Add("initializers", initializers);
 
-            var fields = new List<Dictionary<string, dynamic>>();
+            var fields = new List<dynamic>();
             foreach (var field in Fields)
             {
                 fields.Add(field.Flatten());

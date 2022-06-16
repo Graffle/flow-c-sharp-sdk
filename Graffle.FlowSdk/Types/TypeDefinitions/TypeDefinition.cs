@@ -15,7 +15,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
         [JsonPropertyName("kind")]
         public abstract string Kind { get; }
 
-        public abstract Dictionary<string, dynamic> Flatten();
+        public abstract dynamic Flatten();
 
         public abstract string AsJsonCadenceDataFormat();
 

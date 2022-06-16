@@ -6,46 +6,52 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class InitializerTypeDefinition : ITypeDefinition
     {
-        public InitializerTypeDefinition(string label, string id, TypeDefinition type)
+        public InitializerTypeDefinition(List<ParameterTypeDefinition> parameters)
         {
-            Label = label;
-            Id = id;
-            Type = type;
+            Parameters = parameters;
         }
 
-        public string Label { get; set; }
-        public string Id { get; set; }
-        public TypeDefinition Type { get; set; }
+        public List<ParameterTypeDefinition> Parameters { get; set; }
 
         public string AsJsonCadenceDataFormat()
         {
-            return $"{{\"label\":\"{Label}\",\"id\":\"{Id}\",\"type\":{Type.AsJsonCadenceDataFormat()}}}";
+            var parameters = ParametersAsJson();
+
+            return $"[{string.Join(",", parameters)}]";
         }
 
-        public Dictionary<string, dynamic> Flatten()
+        public dynamic Flatten()
         {
-            var res = new Dictionary<string, dynamic>();
+            List<dynamic> result = new List<dynamic>();
 
-            res.Add("label", Label);
-            res.Add("id", Id);
-            res.Add("type", Type.Flatten());
+            foreach (var p in Parameters)
+            {
+                result.Add(p.Flatten());
+            }
 
-            return res;
+            return result;
         }
 
         public static InitializerTypeDefinition FromJson(string json)
         {
             var parsedJson = JsonDocument.Parse(json);
 
-            var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value.ToString());
+            var root = parsedJson.RootElement.EnumerateArray();
+            List<ParameterTypeDefinition> parameters = new List<ParameterTypeDefinition>();
+            foreach (var item in root)
+            {
+                var tmpJson = item.GetRawText();
+                var parameter = ParameterTypeDefinition.FromJson(tmpJson);
+                parameters.Add(parameter);
+            }
 
-            var label = root["label"];
-            var id = root["id"];
+            return new InitializerTypeDefinition(parameters);
+        }
 
-            var typeJson = root["type"];
-            var type = TypeDefinition.FromJson(typeJson);
-
-            return new InitializerTypeDefinition(label, id, type);
+        private IEnumerable<string> ParametersAsJson()
+        {
+            foreach (var p in Parameters)
+                yield return p.AsJsonCadenceDataFormat();
         }
     }
 }
