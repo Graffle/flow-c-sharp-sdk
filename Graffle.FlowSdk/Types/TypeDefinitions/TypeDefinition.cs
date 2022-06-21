@@ -97,7 +97,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "VariableSizedArray":
                     var variableArrayType = TypeDefinition.FromJson(root["type"]);
 
-                    return new VariableSizedArrayDefinition(variableArrayType);
+                    return new VariableSizedArrayTypeDefinition(variableArrayType);
                 case "ConstantSizedArray":
                     var constantArrayType = TypeDefinition.FromJson(root["type"]);
                     var size = Convert.ToUInt64(root["size"]);

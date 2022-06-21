@@ -18,7 +18,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public override string AsJsonCadenceDataFormat()
         {
-            return $"{{\"kind\":\"{Kind}\",\"size\":{Size},\"type\":{Type}}}";
+            return $"{{\"kind\":\"{Kind}\",\"size\":{Size},\"type\":{Type.AsJsonCadenceDataFormat()}}}";
         }
 
         public override dynamic Flatten()
