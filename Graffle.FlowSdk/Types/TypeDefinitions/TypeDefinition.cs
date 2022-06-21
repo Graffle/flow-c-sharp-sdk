@@ -25,15 +25,21 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 All of this logic should really be contained within each TypeDefinition implementation
                 and ITypeDefinition should expose a FromJson(string) function
             */
-            var parsedJson = JsonDocument.Parse(json);
+            JsonDocument parsedJson;
+            try
+            {
+                parsedJson = JsonDocument.Parse(json);
+            }
+            catch (JsonException)
+            {
+                //not json so it must be a repeated type
+                return new RepeatedTypeDefinition(json);
+            }
 
             if (parsedJson.RootElement.ValueKind == JsonValueKind.String)
             {
-                /*
-                    https://docs.onflow.org/cadence/json-cadence-spec/#repeated-types
-                    When a composite type appears more than once in cadence json the type is represented just by its name to save space
-                    eg "restrictions" : [ "A.f233dcee88fe0abe.FungibleToken.Receiver" ] - here we just have a string instead of a json object
-                */
+                //we have json but it's not a json object
+                //since it's a string we know it's a repeated type
                 var text = parsedJson.RootElement.GetString();
                 return new RepeatedTypeDefinition(text);
             }

@@ -211,12 +211,46 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         public void RestrictedType_NonJsonObjectInRestrictionsArray_Succeeds()
         {
             //huge json here just verify no throw
-            //todo: more accurate test
             var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Resource\",\"typeID\":\"A.9d21537544d9123d.Momentables.NFT\",\"fields\":[{\"id\":\"uuid\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"id\",\"type\":{\"kind\":\"UInt64\"}},{\"id\":\"momentableId\",\"type\":{\"kind\":\"String\"}},{\"id\":\"name\",\"type\":{\"kind\":\"String\"}},{\"id\":\"description\",\"type\":{\"kind\":\"String\"}},{\"id\":\"imageCID\",\"type\":{\"kind\":\"String\"}},{\"id\":\"directoryPath\",\"type\":{\"kind\":\"String\"}},{\"id\":\"traits\",\"type\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"String\"}}}},{\"id\":\"creator\",\"type\":{\"kind\":\"Struct\",\"typeID\":\"A.9d21537544d9123d.Momentables.Creator\",\"fields\":[{\"id\":\"creatorName\",\"type\":{\"kind\":\"String\"}},{\"id\":\"creatorWallet\",\"type\":{\"kind\":\"Capability\",\"type\":{\"kind\":\"Reference\",\"type\":{\"kind\":\"Restriction\",\"typeID\":\"AnyResource{A.f233dcee88fe0abe.FungibleToken.Receiver}\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[{\"kind\":\"ResourceInterface\",\"typeID\":\"A.f233dcee88fe0abe.FungibleToken.Receiver\",\"fields\":[{\"id\":\"uuid\",\"type\":{\"kind\":\"UInt64\"}}],\"initializers\":[],\"type\":\"\"}]},\"authorized\":false}}},{\"id\":\"creatorRoyalty\",\"type\":{\"kind\":\"UFix64\"}}],\"initializers\":[],\"type\":\"\"}},{\"id\":\"collaborators\",\"type\":{\"kind\":\"VariableSizedArray\",\"type\":{\"kind\":\"Struct\",\"typeID\":\"A.9d21537544d9123d.Momentables.Collaborator\",\"fields\":[{\"id\":\"collaboratorName\",\"type\":{\"kind\":\"String\"}},{\"id\":\"collaboratorWallet\",\"type\":{\"kind\":\"Capability\",\"type\":{\"kind\":\"Reference\",\"type\":{\"kind\":\"Restriction\",\"typeID\":\"AnyResource{A.f233dcee88fe0abe.FungibleToken.Receiver}\",\"type\":{\"kind\":\"AnyResource\"},\"restrictions\":[\"A.f233dcee88fe0abe.FungibleToken.Receiver\"]},\"authorized\":false}}},{\"id\":\"collaboratorRoyalty\",\"type\":{\"kind\":\"UFix64\"}}],\"initializers\":[],\"type\":\"\"}}},{\"id\":\"momentableCollectionDetails\",\"type\":{\"kind\":\"Dictionary\",\"key\":{\"kind\":\"String\"},\"value\":{\"kind\":\"String\"}}}],\"initializers\":[],\"type\":\"\"}}}";
             var x = FlowType.FromJson(json);
 
             var y = x.Data.Flatten();
             var resJson = System.Text.Json.JsonSerializer.Serialize(y);
+        }
+
+        [TestMethod]
+        public void CompositeType_WithRepeatedType_Succeeds()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Resource\",\"typeID\":\"0x3.GreatContract.NFT\",\"fields\":[{\"id\":\"foo\",\"type\":{\"kind\":\"Optional\",\"type\":\"0x3.GreatContract.NFT\"}}],\"initializers\":[],\"type\":\"\"}}}";
+
+            var res = FlowType.FromJson(json);
+
+            var data = res.Data;
+            Assert.IsInstanceOfType(data, typeof(CompositeTypeDefinition));
+
+            var composite = data as CompositeTypeDefinition;
+
+            Assert.AreEqual("Resource", composite.Kind);
+            Assert.AreEqual("0x3.GreatContract.NFT", composite.TypeId);
+            Assert.AreEqual(string.Empty, composite.Type);
+
+            var fields = composite.Fields;
+            Assert.AreEqual(1, fields.Count);
+
+            var field = composite.Fields.First();
+
+            Assert.AreEqual("foo", field.Id);
+
+            var fieldType = field.Type;
+            Assert.IsInstanceOfType(fieldType, typeof(OptionalTypeDefinition));
+
+            var optionalFieldType = fieldType as OptionalTypeDefinition;
+
+            var innerType = optionalFieldType.Type;
+            Assert.IsInstanceOfType(innerType, typeof(RepeatedTypeDefinition));
+
+            var repeated = innerType as RepeatedTypeDefinition;
+            Assert.AreEqual("0x3.GreatContract.NFT", repeated.Type);
         }
 
         [TestMethod]
