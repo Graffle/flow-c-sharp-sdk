@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class ReferenceTypeDefinition : TypeDefinition
     {
-        public ReferenceTypeDefinition(bool authorized, TypeDefinition type)
+        public ReferenceTypeDefinition(bool authorized, ITypeDefinition type)
         {
             Authorized = authorized;
             Type = type;
@@ -14,7 +14,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public bool Authorized { get; set; }
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {

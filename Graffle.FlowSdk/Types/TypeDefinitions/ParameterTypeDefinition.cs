@@ -6,7 +6,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class ParameterTypeDefinition : ITypeDefinition
     {
-        public ParameterTypeDefinition(string label, string id, TypeDefinition type)
+        public ParameterTypeDefinition(string label, string id, ITypeDefinition type)
         {
             Label = label;
             Id = id;
@@ -15,7 +15,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public string Label { get; set; }
         public string Id { get; set; }
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public string AsJsonCadenceDataFormat()
         {

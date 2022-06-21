@@ -4,14 +4,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class OptionalTypeDefinition : TypeDefinition
     {
-        public OptionalTypeDefinition(TypeDefinition type)
+        public OptionalTypeDefinition(ITypeDefinition type)
         {
             Type = type;
         }
 
         public override string Kind => "Optional";
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {

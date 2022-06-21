@@ -189,8 +189,9 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var typeData = type.Data;
 
             Assert.IsInstanceOfType(typeData, typeof(SimpleTypeDefinition));
+            var simple = typeData as SimpleTypeDefinition;
 
-            Assert.AreEqual("UInt8", typeData.Kind);
+            Assert.AreEqual("UInt8", simple.Kind);
         }
     }
 }

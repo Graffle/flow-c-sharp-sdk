@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class EnumTypeDefinition : TypeDefinition
     {
-        public EnumTypeDefinition(TypeDefinition type, string typeId, List<FieldTypeDefinition> fields, List<InitializerTypeDefinition> initializers)
+        public EnumTypeDefinition(ITypeDefinition type, string typeId, List<FieldTypeDefinition> fields, List<InitializerTypeDefinition> initializers)
         {
             Type = type;
             TypeId = typeId;
@@ -14,7 +14,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public override string Kind => "Enum";
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public string TypeId { get; set; }
 
@@ -40,14 +40,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             res.Add("type", Type.Flatten());
             res.Add("typeID", TypeId);
 
-            var flatFields = new List<Dictionary<string, dynamic>>();
+            var flatFields = new List<dynamic>();
             foreach (var f in Fields)
             {
                 flatFields.Add(f.Flatten());
             }
             res.Add("fields", flatFields);
 
-            var flatInitializers = new List<Dictionary<string, dynamic>>();
+            var flatInitializers = new List<dynamic>();
             foreach (var i in Initializers)
             {
                 flatInitializers.Add(i.Flatten());

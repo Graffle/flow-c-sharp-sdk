@@ -6,7 +6,7 @@ namespace Graffle.FlowSdk.Types
 {
     public class FlowType : FlowValueType
     {
-        public FlowType(TypeDefinition staticType)
+        public FlowType(ITypeDefinition staticType)
         {
             Data = staticType;
         }
@@ -33,7 +33,7 @@ namespace Graffle.FlowSdk.Types
                     => Constants.FLOW_TYPE_NAME;
 
         [JsonPropertyName("data")]
-        public TypeDefinition Data { get; set; }
+        public ITypeDefinition Data { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {

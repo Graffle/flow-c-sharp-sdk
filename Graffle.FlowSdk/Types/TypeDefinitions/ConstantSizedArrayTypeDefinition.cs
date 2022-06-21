@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class ConstantSizedArrayTypeDefinition : TypeDefinition
     {
-        public ConstantSizedArrayTypeDefinition(TypeDefinition type, ulong size)
+        public ConstantSizedArrayTypeDefinition(ITypeDefinition type, ulong size)
         {
             Type = type;
             Size = size;
@@ -12,13 +12,13 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public override string Kind => "ConstantSizedArray";
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public ulong Size { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {
-            return $"{{\"kind\":\"{Kind}\",\"size\":{Size},\"type\":{Type}}}";
+            return $"{{\"kind\":\"{Kind}\",\"size\":{Size},\"type\":{Type.AsJsonCadenceDataFormat()}}}";
         }
 
         public override dynamic Flatten()

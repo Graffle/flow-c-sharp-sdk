@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class RestrictedTypeDefinition : TypeDefinition
     {
-        public RestrictedTypeDefinition(string typeid, TypeDefinition type, List<TypeDefinition> restrictions)
+        public RestrictedTypeDefinition(string typeid, ITypeDefinition type, List<ITypeDefinition> restrictions)
         {
             TypeId = typeid;
             Type = type;
@@ -15,9 +15,9 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public string TypeId { get; set; }
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
-        public List<TypeDefinition> Restrictions { get; set; }
+        public List<ITypeDefinition> Restrictions { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {
@@ -35,7 +35,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             res.Add("typeID", TypeId);
             res.Add("type", Type.Flatten());
 
-            List<Dictionary<string, dynamic>> restrictions = new List<Dictionary<string, dynamic>>();
+            List<dynamic> restrictions = new List<dynamic>();
             foreach (var r in Restrictions)
             {
                 restrictions.Add(r.Flatten());

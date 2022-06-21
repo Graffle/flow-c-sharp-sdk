@@ -19,13 +19,31 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public abstract string AsJsonCadenceDataFormat();
 
-        public static TypeDefinition FromJson(string json)
+        public static ITypeDefinition FromJson(string json)
         {
             /*  TODO:
                 All of this logic should really be contained within each TypeDefinition implementation
                 and ITypeDefinition should expose a FromJson(string) function
             */
-            var parsedJson = JsonDocument.Parse(json);
+            JsonDocument parsedJson;
+            try
+            {
+                parsedJson = JsonDocument.Parse(json);
+            }
+            catch (JsonException)
+            {
+                //not json so it must be a repeated type
+                return new RepeatedTypeDefinition(json);
+            }
+
+            if (parsedJson.RootElement.ValueKind == JsonValueKind.String)
+            {
+                //we have json but it's not a json object
+                //since it's a string we know it's a repeated type
+                var text = parsedJson.RootElement.GetString();
+                return new RepeatedTypeDefinition(text);
+            }
+
             var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value.ToString());
 
             var kind = root.FirstOrDefault(x => x.Key == "kind").Value.ToString();
@@ -73,27 +91,19 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var restrictionsJson = root["restrictions"];
                     var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
                     var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
-                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
+                    List<ITypeDefinition> restrictionList = new List<ITypeDefinition>();
                     foreach (var r in restrictionsArr)
                     {
-                        if (r.ValueKind == JsonValueKind.Object)
-                        {
-                            var tmpJson = r.GetRawText();
-                            var tmpRestriction = TypeDefinition.FromJson(tmpJson);
-                            restrictionList.Add(tmpRestriction);
-                        }
-                        else //todo fix this: workaround for non-json object in restriction array
-                        {
-                            var tmp = new SimpleTypeDefinition(r.GetRawText());
-                            restrictionList.Add(tmp);
-                        }
+                        var tmpJson = r.GetRawText();
+                        var tmpRestriction = TypeDefinition.FromJson(tmpJson);
+                        restrictionList.Add(tmpRestriction);
                     }
 
                     return new RestrictedTypeDefinition(restrictionTypeId, restrictionType, restrictionList);
                 case "VariableSizedArray":
                     var variableArrayType = TypeDefinition.FromJson(root["type"]);
 
-                    return new VariableSizedArrayDefinition(variableArrayType);
+                    return new VariableSizedArrayTypeDefinition(variableArrayType);
                 case "ConstantSizedArray":
                     var constantArrayType = TypeDefinition.FromJson(root["type"]);
                     var size = Convert.ToUInt64(root["size"]);
@@ -169,9 +179,8 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "AccountKey":
                 case "Block":
                     return new SimpleTypeDefinition(kind);
-                // --end simple types
                 default:
-                    throw new NotImplementedException($"Unknown or unsupported type {kind}");
+                    throw new NotImplementedException($"Unknown or unsupported type {kind}, json {json}");
             }
         }
 
