@@ -21,7 +21,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             return $"{{\"kind\":\"{Kind}\",\"key\":{Key.AsJsonCadenceDataFormat()},\"value\":{Value.AsJsonCadenceDataFormat()}}}";
         }
 
-        public override Dictionary<string, dynamic> Flatten()
+        public override dynamic Flatten()
         {
             var res = new Dictionary<string, dynamic>();
 

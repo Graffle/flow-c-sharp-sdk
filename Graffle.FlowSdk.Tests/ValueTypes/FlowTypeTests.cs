@@ -47,6 +47,41 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
         }
 
         [TestMethod]
+        public void CompositeTypeDefinition_WithInitializers_ReturnsCompositeTypeDefinition()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Resource\",\"type\":\"\",\"typeID\":\"0x3.GreatContract.GreatNFT\",\"initializers\":[[{\"label\":\"foo\",\"id\":\"bar\",\"type\":{\"kind\":\"String\"}}]],\"fields\":[{\"id\":\"foo\",\"type\":{\"kind\":\"String\"}}]}}}";
+            var result = FlowType.FromJson(json);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Type", result.Type);
+
+            //break down the inner type definition and make sure it's all good
+            var data = result.Data;
+            Assert.IsInstanceOfType(data, typeof(CompositeTypeDefinition));
+
+            var composite = data as CompositeTypeDefinition;
+            //just gonna test initializers here
+
+            var initializers = composite.Initializers;
+            Assert.AreEqual(1, initializers.Count); //initializers is an array of arrays
+
+            var init = initializers.First();
+            var parameters = init.Parameters;
+
+            Assert.AreEqual(1, parameters.Count());
+            var parameter = parameters.First();
+
+            Assert.AreEqual("foo", parameter.Label);
+            Assert.AreEqual("bar", parameter.Id);
+
+            var paramType = parameter.Type;
+            Assert.IsInstanceOfType(paramType, typeof(SimpleTypeDefinition));
+
+            var simple = paramType as SimpleTypeDefinition;
+            Assert.AreEqual("String", simple.Kind);
+        }
+
+        [TestMethod]
         [DataRow("UInt8")]
         [DataRow("Address")]
         [DataRow("String")]
@@ -218,6 +253,34 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var initializers = enumTypeDef.Initializers;
             Assert.IsNotNull(initializers);
             Assert.AreEqual(0, initializers.Count());
+        }
+
+        [TestMethod]
+        public void FunctionType_ReturnsFunctionType()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"Function\",\"typeID\":\"foo\",\"parameters\":[{\"label\":\"foo\",\"id\":\"bar\",\"type\":{\"kind\":\"String\"}}],\"return\":{\"kind\":\"String\"}}}}";
+
+            var res = FlowType.FromJson(json);
+
+            var data = res.Data;
+            Assert.AreEqual("Function", data.Kind);
+            Assert.IsInstanceOfType(data, typeof(FunctionTypeDefinition));
+
+            var function = data as FunctionTypeDefinition;
+            Assert.AreEqual("foo", function.TypeId);
+
+            Assert.IsInstanceOfType(function.Return, typeof(SimpleTypeDefinition));
+            var returnType = function.Return as SimpleTypeDefinition;
+            Assert.AreEqual("String", returnType.Kind);
+
+            Assert.AreEqual(1, function.Parameters.Count);
+            var funcParam = function.Parameters.First();
+            Assert.AreEqual("foo", funcParam.Label);
+            Assert.AreEqual("bar", funcParam.Id);
+
+            Assert.IsInstanceOfType(funcParam.Type, typeof(SimpleTypeDefinition));
+            var funcParamType = funcParam.Type as SimpleTypeDefinition;
+            Assert.AreEqual("String", funcParamType.Kind);
         }
     }
 }

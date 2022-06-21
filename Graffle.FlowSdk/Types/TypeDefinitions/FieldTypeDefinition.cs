@@ -20,7 +20,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             return $"{{\"id\":\"{Id}\",\"type\":{Type.AsJsonCadenceDataFormat()}}}";
         }
 
-        public Dictionary<string, dynamic> Flatten()
+        public dynamic Flatten()
         {
             var res = new Dictionary<string, dynamic>();
 

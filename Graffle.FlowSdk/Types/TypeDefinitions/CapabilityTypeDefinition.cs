@@ -25,7 +25,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             return $"{{\"kind\":\"{Kind}\",\"type\":{typeJson}}}";
         }
 
-        public override Dictionary<string, dynamic> Flatten()
+        public override dynamic Flatten()
         {
             var res = new Dictionary<string, dynamic>();
 
