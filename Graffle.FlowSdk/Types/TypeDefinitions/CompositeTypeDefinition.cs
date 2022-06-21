@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
@@ -16,19 +13,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             Initializers = initializers;
         }
 
-        [JsonPropertyName("kind")]
         public override string Kind { get; }
 
-        [JsonPropertyName("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("typeID")]
         public string TypeId { get; set; }
 
-        [JsonPropertyName("initializers")]
         public List<InitializerTypeDefinition> Initializers { get; set; }
 
-        [JsonPropertyName("fields")]
         public List<FieldTypeDefinition> Fields { get; set; }
 
         public override string AsJsonCadenceDataFormat()
