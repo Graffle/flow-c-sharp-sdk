@@ -173,9 +173,8 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                 case "AccountKey":
                 case "Block":
                     return new SimpleTypeDefinition(kind);
-                // --end simple types
                 default:
-                    throw new NotImplementedException($"Unknown or unsupported type {kind}");
+                    throw new NotImplementedException($"Unknown or unsupported type {kind}, json {json}");
             }
         }
 

@@ -280,5 +280,44 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var funcParamType = funcParam.Type as SimpleTypeDefinition;
             Assert.AreEqual("String", funcParamType.Kind);
         }
+
+        [TestMethod]
+        public void ConstantSizedArray_ReturnsConstantSizedArray()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"ConstantSizedArray\",\"type\":{\"kind\":\"String\"},\"size\":3}}}";
+            var res = FlowType.FromJson(json);
+
+            var data = res.Data;
+            Assert.IsInstanceOfType(data, typeof(ConstantSizedArrayTypeDefinition));
+
+            var arr = data as ConstantSizedArrayTypeDefinition;
+            Assert.AreEqual("ConstantSizedArray", arr.Kind);
+            Assert.AreEqual((ulong)3, arr.Size);
+
+            var arrType = arr.Type;
+            Assert.IsInstanceOfType(arrType, typeof(SimpleTypeDefinition));
+
+            var simple = arrType as SimpleTypeDefinition;
+            Assert.AreEqual("String", simple.Kind);
+        }
+
+        [TestMethod]
+        public void VariableSizedArray_ReturnsVariableSizedArray()
+        {
+            var json = "{\"type\":\"Type\",\"value\":{\"staticType\":{\"kind\":\"VariableSizedArray\",\"type\":{\"kind\":\"String\"}}}}";
+            var res = FlowType.FromJson(json);
+
+            var data = res.Data;
+            Assert.IsInstanceOfType(data, typeof(VariableSizedArrayTypeDefinition));
+
+            var arr = data as VariableSizedArrayTypeDefinition;
+            Assert.AreEqual("VariableSizedArray", arr.Kind);
+
+            var arrType = arr.Type;
+            Assert.IsInstanceOfType(arrType, typeof(SimpleTypeDefinition));
+
+            var simple = arrType as SimpleTypeDefinition;
+            Assert.AreEqual("String", simple.Kind);
+        }
     }
 }
