@@ -6,14 +6,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class FieldTypeDefinition : ITypeDefinition
     {
-        public FieldTypeDefinition(string id, TypeDefinition type)
+        public FieldTypeDefinition(string id, ITypeDefinition type)
         {
             Id = id;
             Type = type;
         }
 
         public string Id { get; set; }
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public string AsJsonCadenceDataFormat()
         {

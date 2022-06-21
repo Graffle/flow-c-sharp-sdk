@@ -6,7 +6,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class CapabilityTypeDefinition : TypeDefinition
     {
-        public CapabilityTypeDefinition(string kind, TypeDefinition type)
+        public CapabilityTypeDefinition(string kind, ITypeDefinition type)
         {
             Kind = kind;
             Type = type;
@@ -16,7 +16,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
         public override string Kind { get; }
 
         [JsonPropertyName("type")]
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {

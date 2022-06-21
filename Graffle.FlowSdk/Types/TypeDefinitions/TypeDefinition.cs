@@ -19,13 +19,25 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public abstract string AsJsonCadenceDataFormat();
 
-        public static TypeDefinition FromJson(string json)
+        public static ITypeDefinition FromJson(string json)
         {
             /*  TODO:
                 All of this logic should really be contained within each TypeDefinition implementation
                 and ITypeDefinition should expose a FromJson(string) function
             */
             var parsedJson = JsonDocument.Parse(json);
+
+            if (parsedJson.RootElement.ValueKind == JsonValueKind.String)
+            {
+                /*
+                    https://docs.onflow.org/cadence/json-cadence-spec/#repeated-types
+                    When a composite type appears more than once in cadence json the type is represented just by its name to save space
+                    eg "restrictions" : [ "A.f233dcee88fe0abe.FungibleToken.Receiver" ] - here we just have a string instead of a json object
+                */
+                var text = parsedJson.RootElement.GetString();
+                return new RepeatedTypeDefinition(text);
+            }
+
             var root = parsedJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value.ToString());
 
             var kind = root.FirstOrDefault(x => x.Key == "kind").Value.ToString();
@@ -73,20 +85,12 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     var restrictionsJson = root["restrictions"];
                     var parsedRestrictions = JsonDocument.Parse(restrictionsJson);
                     var restrictionsArr = parsedRestrictions.RootElement.EnumerateArray();
-                    List<TypeDefinition> restrictionList = new List<TypeDefinition>();
+                    List<ITypeDefinition> restrictionList = new List<ITypeDefinition>();
                     foreach (var r in restrictionsArr)
                     {
-                        if (r.ValueKind == JsonValueKind.Object)
-                        {
-                            var tmpJson = r.GetRawText();
-                            var tmpRestriction = TypeDefinition.FromJson(tmpJson);
-                            restrictionList.Add(tmpRestriction);
-                        }
-                        else //todo fix this: workaround for non-json object in restriction array
-                        {
-                            var tmp = new SimpleTypeDefinition(r.GetRawText());
-                            restrictionList.Add(tmp);
-                        }
+                        var tmpJson = r.GetRawText();
+                        var tmpRestriction = TypeDefinition.FromJson(tmpJson);
+                        restrictionList.Add(tmpRestriction);
                     }
 
                     return new RestrictedTypeDefinition(restrictionTypeId, restrictionType, restrictionList);

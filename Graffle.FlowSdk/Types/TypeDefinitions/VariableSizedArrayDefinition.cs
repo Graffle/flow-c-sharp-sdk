@@ -4,14 +4,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class VariableSizedArrayDefinition : TypeDefinition
     {
-        public VariableSizedArrayDefinition(TypeDefinition type)
+        public VariableSizedArrayDefinition(ITypeDefinition type)
         {
             Type = type;
         }
 
         public override string Kind => "VariableSizedArray";
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {

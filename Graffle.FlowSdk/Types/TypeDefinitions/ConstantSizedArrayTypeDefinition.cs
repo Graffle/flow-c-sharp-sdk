@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class ConstantSizedArrayTypeDefinition : TypeDefinition
     {
-        public ConstantSizedArrayTypeDefinition(TypeDefinition type, ulong size)
+        public ConstantSizedArrayTypeDefinition(ITypeDefinition type, ulong size)
         {
             Type = type;
             Size = size;
@@ -12,7 +12,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public override string Kind => "ConstantSizedArray";
 
-        public TypeDefinition Type { get; set; }
+        public ITypeDefinition Type { get; set; }
 
         public ulong Size { get; set; }
 

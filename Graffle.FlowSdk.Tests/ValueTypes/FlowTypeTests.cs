@@ -30,9 +30,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var data = result.Data;
             Assert.IsInstanceOfType(data, typeof(CompositeTypeDefinition));
 
-            Assert.AreEqual(kind, data.Kind);
-
             var composite = data as CompositeTypeDefinition;
+            Assert.AreEqual(kind, composite.Kind);
             Assert.AreEqual("A.ff68241f0f4fd521.DrSeuss.NFT", composite.TypeId);
 
             var fields = composite.Fields;
@@ -122,7 +121,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.IsInstanceOfType(key, typeof(SimpleTypeDefinition));
 
             var simpleKey = key as SimpleTypeDefinition;
-            Assert.AreEqual("String", key.Kind);
+            Assert.AreEqual("String", simpleKey.Kind);
 
             var value = dict.Value;
             Assert.IsInstanceOfType(value, typeof(SimpleTypeDefinition));
@@ -146,7 +145,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var reference = data as ReferenceTypeDefinition;
 
             Assert.AreEqual(true, reference.Authorized);
-            Assert.AreEqual("Reference", data.Kind);
+            Assert.AreEqual("Reference", reference.Kind);
 
             var type = reference.Type;
 
@@ -187,7 +186,7 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             var restricted = data as RestrictedTypeDefinition;
 
-            Assert.AreEqual(data.Kind, "Restriction");
+            Assert.AreEqual(restricted.Kind, "Restriction");
 
             Assert.AreEqual("0x3.GreatContract.GreatNFT", restricted.TypeId);
 
@@ -230,10 +229,10 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.IsNotNull(res);
 
             var data = res.Data;
-            Assert.AreEqual("Enum", data.Kind);
             Assert.IsInstanceOfType(data, typeof(EnumTypeDefinition));
 
             var enumTypeDef = data as EnumTypeDefinition;
+            Assert.AreEqual("Enum", enumTypeDef.Kind);
             Assert.AreEqual("0x3.GreatContract.GreatEnum", enumTypeDef.TypeId);
 
             Assert.IsInstanceOfType(enumTypeDef.Type, typeof(SimpleTypeDefinition));
@@ -263,10 +262,10 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var res = FlowType.FromJson(json);
 
             var data = res.Data;
-            Assert.AreEqual("Function", data.Kind);
             Assert.IsInstanceOfType(data, typeof(FunctionTypeDefinition));
 
             var function = data as FunctionTypeDefinition;
+            Assert.AreEqual("Function", function.Kind);
             Assert.AreEqual("foo", function.TypeId);
 
             Assert.IsInstanceOfType(function.Return, typeof(SimpleTypeDefinition));

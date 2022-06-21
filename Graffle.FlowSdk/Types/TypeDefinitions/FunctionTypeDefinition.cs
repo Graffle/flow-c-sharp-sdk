@@ -4,7 +4,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 {
     public class FunctionTypeDefinition : TypeDefinition
     {
-        public FunctionTypeDefinition(string typeId, List<ParameterTypeDefinition> parameters, TypeDefinition returnType)
+        public FunctionTypeDefinition(string typeId, List<ParameterTypeDefinition> parameters, ITypeDefinition returnType)
         {
             TypeId = typeId;
             Parameters = parameters;
@@ -17,7 +17,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
 
         public List<ParameterTypeDefinition> Parameters { get; set; }
 
-        public TypeDefinition Return { get; set; }
+        public ITypeDefinition Return { get; set; }
 
         public override string AsJsonCadenceDataFormat()
         {
