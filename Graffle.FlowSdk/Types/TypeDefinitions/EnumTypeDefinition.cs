@@ -40,14 +40,14 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             res.Add("type", Type.Flatten());
             res.Add("typeID", TypeId);
 
-            var flatFields = new List<Dictionary<string, dynamic>>();
+            var flatFields = new List<dynamic>();
             foreach (var f in Fields)
             {
                 flatFields.Add(f.Flatten());
             }
             res.Add("fields", flatFields);
 
-            var flatInitializers = new List<Dictionary<string, dynamic>>();
+            var flatInitializers = new List<dynamic>();
             foreach (var i in Initializers)
             {
                 flatInitializers.Add(i.Flatten());

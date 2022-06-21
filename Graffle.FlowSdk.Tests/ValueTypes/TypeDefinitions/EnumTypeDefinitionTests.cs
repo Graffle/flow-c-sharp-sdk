@@ -55,11 +55,12 @@ namespace Graffle.FlowSdk.Tests.ValueTypes.TypeDefinitions
             Assert.AreEqual("String", typeDict["kind"]);
 
             var resultFields = res["fields"];
-            Assert.IsInstanceOfType(resultFields, typeof(List<Dictionary<string, object>>));
-            var fieldsList = resultFields as List<Dictionary<string, object>>;
+            Assert.IsInstanceOfType(resultFields, typeof(List<object>));
+            var fieldsList = resultFields as List<object>;
 
             Assert.AreEqual(1, fieldsList.Count);
-            var resultField = fieldsList.First();
+            var resultField = fieldsList.First() as Dictionary<string, object>;
+            Assert.IsNotNull(resultField);
             Assert.AreEqual(field.Id, resultField["id"]);
 
             var fieldType = resultField["type"];
@@ -69,8 +70,8 @@ namespace Graffle.FlowSdk.Tests.ValueTypes.TypeDefinitions
             Assert.AreEqual(uInt8Type.Kind, fieldDict["kind"]);
 
             var resultInitializers = res["initializers"];
-            Assert.IsInstanceOfType(resultInitializers, typeof(List<Dictionary<string, object>>));
-            var initializerList = resultInitializers as List<Dictionary<string, object>>;
+            Assert.IsInstanceOfType(resultInitializers, typeof(List<object>));
+            var initializerList = resultInitializers as List<object>;
 
             Assert.AreEqual(0, initializerList.Count);
         }
