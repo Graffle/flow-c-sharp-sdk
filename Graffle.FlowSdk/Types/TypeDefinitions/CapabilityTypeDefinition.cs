@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 using System.Text.Json.Serialization;
 
 namespace Graffle.FlowSdk.Types.TypeDefinitions
