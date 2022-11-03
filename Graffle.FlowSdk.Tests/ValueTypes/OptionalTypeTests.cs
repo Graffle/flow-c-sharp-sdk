@@ -193,5 +193,23 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
 
             Assert.AreEqual("UInt8", simple.Kind);
         }
+
+        [TestMethod]
+        public void OptionalString_ContainsEscapedCharacters_DeserializesCorrectly()
+        {
+            //https://flowscan.org/transaction/60b8d95c0656da483e879484fa57017f1b1a8e3e0c24ee59c4d7eda75ca03f1d
+            //A.097bafa4e0b48eef.FindLostAndFoundWrapper.NFTDeposited
+            var json = "{\"type\":\"Optional\",\"value\":{\"type\":\"String\",\"value\":\"Derrick \\\"The Black Beast\\\" Lewis delivers a lights out uppercut against Curtis Blaydes, to break the record for the most KOs in UFC heavyweight history and tie for the most KO/TKO wins in UFC history\"}}";
+
+            var result = OptionalType.FromJson(json);
+            Assert.IsNotNull(result);
+
+            var str = result.Data as StringType;
+            Assert.IsNotNull(str);
+
+            var data = str.Data;
+
+            Assert.AreEqual("Derrick \"The Black Beast\" Lewis delivers a lights out uppercut against Curtis Blaydes, to break the record for the most KOs in UFC heavyweight history and tie for the most KO/TKO wins in UFC history", data);
+        }
     }
 }

@@ -27,15 +27,17 @@ namespace Graffle.FlowSdk.Types
             else
             {
                 var type = attempt.GetProperty("type").ToString() ?? null;
-                var value = attempt.GetProperty("value").ToString();
 
                 string jsonObject;
-                if (FlowValueType.IsPrimitiveType(type))
+                if (FlowValueType.IsPrimitiveType(type) && type != "String") //don't handle strings here
                 {
+                    var value = attempt.GetProperty("value").ToString();
                     jsonObject = $"{{\"type\":\"{type}\",\"value\":\"{value}\"}}";
                 }
                 else
                 {
+                    var value = attempt.GetProperty("value").GetRawText(); //get the raw json, there could be some escaped characters in here and we want to keep them escaped for further parsing
+
                     //we're dealing with a complex type here and value is going to be a json string
                     //ie do not wrap value in quotes
                     jsonObject = $"{{\"type\":\"{type}\",\"value\":{value}}}";
