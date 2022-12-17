@@ -41,9 +41,10 @@ namespace Graffle.FlowSdk
             return flowClient;
         }
 
-        public async Task Ping()
+        public async Task<bool> Ping()
         {
-            await client.PingAsync(new Flow.Access.PingRequest());
+            var res = await client.PingAsync(new Flow.Access.PingRequest());
+            return res != null;
         }
 
         public async Task<Flow.Access.BlockResponse> GetLatestBlockAsync(bool isSealed = true, CallOptions options = new CallOptions())
