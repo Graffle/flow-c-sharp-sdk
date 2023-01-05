@@ -44,16 +44,16 @@ namespace Graffle.FlowSdk.Types
             foreach (var item in dictionaryValues)
             {
                 //Get the value portion out
-                var valueJson = JsonDocument.Parse(item.Values.Last());
+                var valueJson = JsonDocument.Parse(item["value"]);
                 var valueJsonElementsKvp = valueJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
                 var valueJsonType = valueJsonElementsKvp.FirstOrDefault(z => z.Key == "type").Value;
-                var myValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item.Values.Last());
+                var myValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item["value"]);
 
                 //Get the key portion
-                var keyJson = JsonDocument.Parse(item.Values.First());
+                var keyJson = JsonDocument.Parse(item["key"]);
                 var keyJsonElementsKvp = keyJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
                 var keyJsonType = keyJsonElementsKvp.FirstOrDefault(z => z.Key == "type").Value;
-                var key = FlowValueType.CreateFromCadence(keyJsonType.GetString(), item.Values.First());
+                var key = FlowValueType.CreateFromCadence(keyJsonType.GetString(), item["key"]);
 
                 result.Data.Add(key, myValue);
             }
