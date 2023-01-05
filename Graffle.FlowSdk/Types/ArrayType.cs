@@ -40,7 +40,7 @@ namespace Graffle.FlowSdk.Types
             var result = new ArrayType(new List<FlowValueType>());
             foreach (var field in fields)
             {
-                var newItem = FlowValueType.Create(field.First().Value, field.Last().Value);
+                var newItem = FlowValueType.Create(field["type"], field["value"]);
                 result.Data.Add(newItem);
             }
             return result;

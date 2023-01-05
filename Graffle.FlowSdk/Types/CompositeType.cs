@@ -77,13 +77,13 @@ namespace Graffle.FlowSdk.Types
             foreach (var item in fields)
             {
                 //name
-                var name = item.Values.First();
+                var name = item["name"];
 
                 //value
-                var valueJson = JsonDocument.Parse(item.Values.Last());
+                var valueJson = JsonDocument.Parse(item["value"]);
                 var valueJsonElementsKvp = valueJson.RootElement.EnumerateObject().ToDictionary(x => x.Name, x => x.Value);
                 var valueJsonType = valueJsonElementsKvp.FirstOrDefault(z => z.Key == "type").Value;
-                var flowValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item.Values.Last());
+                var flowValue = FlowValueType.CreateFromCadence(valueJsonType.GetString(), item["value"]);
 
                 parsedFields.Add(new CompositeField(name, flowValue));
             }
