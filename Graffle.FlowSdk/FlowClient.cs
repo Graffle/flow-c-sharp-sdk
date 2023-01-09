@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Google.Protobuf;
+using Graffle.FlowSdk.Cryptography;
+using Graffle.FlowSdk.Types;
+using Grpc.Core;
+using Grpc.Net.Client;
+using Org.BouncyCastle.Crypto.Parameters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Graffle.FlowSdk.Types;
-using Graffle.FlowSdk.Cryptography;
-using Google.Protobuf;
-using Grpc.Core;
-using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Graffle.FlowSdk
 {
@@ -16,9 +16,10 @@ namespace Graffle.FlowSdk
         /// <summary>
         /// GRPC channel options
         /// </summary>
-        private static readonly List<ChannelOption> GRPC_CHANNEL_OPTIONS = new List<ChannelOption>()
+        private static readonly GrpcChannelOptions GRPC_CHANNEL_OPTIONS = new GrpcChannelOptions()
         {
-             new ChannelOption(ChannelOptions.MaxReceiveMessageLength, -1) //https://grpc.github.io/grpc/core/group__grpc__arg__keys.html#ga813f94f9ac3174571dd712c96cdbbdc1
+            Credentials = ChannelCredentials.Insecure,
+            MaxReceiveMessageSize = null, //null = no limit
         };
 
         private Flow.Access.AccessAPI.AccessAPIClient client;
@@ -35,7 +36,10 @@ namespace Graffle.FlowSdk
         /// <returns></returns>
         public static FlowClient Create(string accessNodeURI)
         {
-            var channel = new Channel(accessNodeURI, ChannelCredentials.Insecure, GRPC_CHANNEL_OPTIONS);
+            if (!accessNodeURI.StartsWith("http://"))
+                accessNodeURI = $"http://{accessNodeURI}";
+
+            var channel = GrpcChannel.ForAddress(accessNodeURI, GRPC_CHANNEL_OPTIONS);
             var client = new Flow.Access.AccessAPI.AccessAPIClient(channel);
             var flowClient = new FlowClient(client);
             return flowClient;
