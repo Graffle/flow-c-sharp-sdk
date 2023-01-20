@@ -769,5 +769,25 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             Assert.IsNotNull(composite.Fields);
             Assert.IsTrue(composite.Fields.Any());
         }
+
+        [TestMethod]
+        public void CreateFromCadence_FunctionType()
+        {
+            var json = @"{""type"":""Function"",""value"":{""functionType"":{""kind"":""Function"",""typeID"":""(():Void)"",""parameters"":[],""return"":{""kind"":""Void""}}}}";
+            var res = FlowValueType.CreateFromCadence("Function", json);
+            Assert.IsNotNull(res);
+            Assert.IsInstanceOfType(res, typeof(FunctionType));
+
+            var res2 = FlowValueType.CreateFromCadence(json);
+            Assert.IsInstanceOfType(res2, typeof(FunctionType));
+        }
+
+        [TestMethod]
+        public void Create_FunctionType()
+        {
+            var json = @"{""type"":""Function"",""value"":{""functionType"":{""kind"":""Function"",""typeID"":""(():Void)"",""parameters"":[],""return"":{""kind"":""Void""}}}}";
+            var res = FlowValueType.Create("Function", json);
+            Assert.IsInstanceOfType(res, typeof(FunctionType));
+        }
     }
 }
