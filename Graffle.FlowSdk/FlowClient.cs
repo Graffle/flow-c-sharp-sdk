@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Graffle.FlowSdk
 {
-    public class FlowClient
+    public class FlowClient : IDisposable
     {
         /// <summary>
         /// GRPC channel options
@@ -23,10 +23,12 @@ namespace Graffle.FlowSdk
         };
 
         private Flow.Access.AccessAPI.AccessAPIClient client;
+        private GrpcChannel channel;
 
-        private FlowClient(Flow.Access.AccessAPI.AccessAPIClient client)
+        private FlowClient(Flow.Access.AccessAPI.AccessAPIClient client, GrpcChannel channel)
         {
             this.client = client;
+            this.channel = channel;
         }
 
         /// <summary>
@@ -39,9 +41,9 @@ namespace Graffle.FlowSdk
             if (!accessNodeURI.StartsWith("http://"))
                 accessNodeURI = $"http://{accessNodeURI}";
 
-            var channel = GrpcChannel.ForAddress(accessNodeURI, GRPC_CHANNEL_OPTIONS);
-            var client = new Flow.Access.AccessAPI.AccessAPIClient(channel);
-            var flowClient = new FlowClient(client);
+            var rpcChannel = GrpcChannel.ForAddress(accessNodeURI, GRPC_CHANNEL_OPTIONS);
+            var rpcClient = new Flow.Access.AccessAPI.AccessAPIClient(rpcChannel);
+            var flowClient = new FlowClient(rpcClient, rpcChannel);
             return flowClient;
         }
 
@@ -172,6 +174,29 @@ namespace Graffle.FlowSdk
         public async Task<Flow.Access.SendTransactionResponse> SendTransactionAsync(Flow.Access.SendTransactionRequest sendTransactionRequest, CallOptions options = new CallOptions())
         {
             return await client.SendTransactionAsync(sendTransactionRequest, options);
+        }
+
+        private bool _isDisposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    channel.Dispose();
+                }
+
+                _isDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

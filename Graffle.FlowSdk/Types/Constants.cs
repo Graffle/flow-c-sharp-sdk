@@ -36,5 +36,6 @@ namespace Graffle.FlowSdk.Types
         public const string EVENT_TYPE_NAME = "Event";
         public const string CONTRACT_TYPE_NAME = "Contract";
         public const string ENUM_TYPE_NAME = "Enum";
+        public const string FUNCTION_TYPE_NAME = "Function";
     }
 }

@@ -56,6 +56,7 @@ namespace Graffle.FlowSdk.Types
                 { Constants.EVENT_TYPE_NAME, CompositeType.FromJson },
                 { Constants.CONTRACT_TYPE_NAME, CompositeType.FromJson },
                 { Constants.ENUM_TYPE_NAME, CompositeType.FromJson },
+                { Constants.FUNCTION_TYPE_NAME, FunctionType.FromJson }
             };
 
             /* Note for the "arg is string" syntax below
@@ -98,6 +99,7 @@ namespace Graffle.FlowSdk.Types
                 { Constants.EVENT_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.EVENT_TYPE_NAME, arg) : new CompositeType(Constants.EVENT_TYPE_NAME, arg) },
                 { Constants.CONTRACT_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.CONTRACT_TYPE_NAME, arg) : new CompositeType(Constants.CONTRACT_TYPE_NAME, arg) },
                 { Constants.ENUM_TYPE_NAME, (arg) => arg is string ? CompositeType.FromJson(Constants.ENUM_TYPE_NAME, arg) : new CompositeType(Constants.ENUM_TYPE_NAME, arg) },
+                { Constants.FUNCTION_TYPE_NAME, (arg) => arg is string? FunctionType.FromJson(arg) : new FunctionType(arg)}
             };
 
             primitiveTypes = new HashSet<string>()
