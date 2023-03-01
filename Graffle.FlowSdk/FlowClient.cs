@@ -26,7 +26,7 @@ namespace Graffle.FlowSdk
 
         public FlowClient(Flow.Access.AccessAPI.AccessAPIClient client)
         {
-            if (_client == null)
+            if (client == null)
                 throw new ArgumentNullException(nameof(client));
 
             _client = client;
