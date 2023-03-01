@@ -22,11 +22,14 @@ namespace Graffle.FlowSdk
             MaxReceiveMessageSize = null, //null = no limit
         };
 
-        private Flow.Access.AccessAPI.AccessAPIClient client;
+        private readonly Flow.Access.AccessAPI.AccessAPIClient _client;
 
-        private FlowClient(Flow.Access.AccessAPI.AccessAPIClient client)
+        public FlowClient(Flow.Access.AccessAPI.AccessAPIClient client)
         {
-            this.client = client;
+            if (_client == null)
+                throw new ArgumentNullException(nameof(client));
+
+            _client = client;
         }
 
         /// <summary>
@@ -55,21 +58,21 @@ namespace Graffle.FlowSdk
 
         public async Task<bool> Ping()
         {
-            var res = await client.PingAsync(new Flow.Access.PingRequest());
+            var res = await _client.PingAsync(new Flow.Access.PingRequest());
             return res != null;
         }
 
         public async Task<Flow.Access.BlockResponse> GetLatestBlockAsync(bool isSealed = true, CallOptions options = new CallOptions())
         {
             var request = new Flow.Access.GetLatestBlockRequest() { IsSealed = isSealed };
-            var result = await client.GetLatestBlockAsync(request, options);
+            var result = await _client.GetLatestBlockAsync(request, options);
             return result;
         }
 
         public async Task<Flow.Access.EventsResponse> GetEventsForHeightRangeAsync(string eventType, ulong startHeight, ulong endHeight, CallOptions options = new CallOptions())
         {
             var request = new Flow.Access.GetEventsForHeightRangeRequest() { Type = eventType, StartHeight = startHeight, EndHeight = endHeight };
-            var result = await client.GetEventsForHeightRangeAsync(request, options);
+            var result = await _client.GetEventsForHeightRangeAsync(request, options);
             return result;
         }
 
@@ -80,7 +83,7 @@ namespace Graffle.FlowSdk
             foreach (var arg in args)
                 request.Arguments.Add(arg.ToByteString());
 
-            return await client.ExecuteScriptAtBlockHeightAsync(request, options);
+            return await _client.ExecuteScriptAtBlockHeightAsync(request, options);
         }
 
         public async Task<Flow.Access.ExecuteScriptResponse> ExecuteScriptAtBlockIdAsync(ByteString blockId, byte[] cadenceScript, IEnumerable<FlowValueType> args, CallOptions options = new CallOptions())
@@ -90,24 +93,24 @@ namespace Graffle.FlowSdk
             foreach (var arg in args)
                 request.Arguments.Add(arg.ToByteString());
 
-            return await client.ExecuteScriptAtBlockIDAsync(request, options);
+            return await _client.ExecuteScriptAtBlockIDAsync(request, options);
         }
 
         public async Task<Flow.Access.BlockResponse> GetBlockByHeightAsync(ulong blockHeight, CallOptions options = new CallOptions())
         {
             var request = new Flow.Access.GetBlockByHeightRequest() { Height = blockHeight };
-            return await client.GetBlockByHeightAsync(request, options);
+            return await _client.GetBlockByHeightAsync(request, options);
         }
 
         public async Task<Flow.Access.TransactionResponse> GetTransactionAsync(ByteString transactionId)
         {
-            var result = await client.GetTransactionAsync(new Flow.Access.GetTransactionRequest() { Id = transactionId });
+            var result = await _client.GetTransactionAsync(new Flow.Access.GetTransactionRequest() { Id = transactionId });
             return result;
         }
 
         public async Task<Flow.Access.AccountResponse> GetAccountAsync(string address, ulong blockHeight)
         {
-            var result = await client.GetAccountAtBlockHeightAsync(
+            var result = await _client.GetAccountAtBlockHeightAsync(
                 new Flow.Access.GetAccountAtBlockHeightRequest()
                 {
                     BlockHeight = blockHeight,
@@ -119,14 +122,14 @@ namespace Graffle.FlowSdk
         public async Task<Flow.Access.CollectionResponse> GetCollectionById(ByteString collectionId)
         {
             var request = new Flow.Access.GetCollectionByIDRequest() { Id = collectionId };
-            var result = await client.GetCollectionByIDAsync(request);
+            var result = await _client.GetCollectionByIDAsync(request);
             return result;
         }
 
         public async Task<Flow.Access.TransactionResultResponse> GetTransactionResult(ByteString transactionId)
         {
             var request = new Flow.Access.GetTransactionRequest() { Id = transactionId };
-            var result = await client.GetTransactionResultAsync(request);
+            var result = await _client.GetTransactionResultAsync(request);
             return result;
         }
 
@@ -137,7 +140,7 @@ namespace Graffle.FlowSdk
                 Address = address
             };
 
-            var accountReponse = await client.GetAccountAtLatestBlockAsync(request);
+            var accountReponse = await _client.GetAccountAtLatestBlockAsync(request);
 
             return accountReponse.Account;
         }
@@ -179,7 +182,7 @@ namespace Graffle.FlowSdk
 
         public async Task<Flow.Access.SendTransactionResponse> SendTransactionAsync(Flow.Access.SendTransactionRequest sendTransactionRequest, CallOptions options = new CallOptions())
         {
-            return await client.SendTransactionAsync(sendTransactionRequest, options);
+            return await _client.SendTransactionAsync(sendTransactionRequest, options);
         }
     }
 }
