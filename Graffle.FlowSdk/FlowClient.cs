@@ -47,7 +47,8 @@ namespace Graffle.FlowSdk
 
         public static FlowClient Create(GrpcChannel channel)
         {
-            channel = channel ?? throw new ArgumentNullException(nameof(channel));
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+
             var client = new Flow.Access.AccessAPI.AccessAPIClient(channel);
             return new FlowClient(client);
         }
