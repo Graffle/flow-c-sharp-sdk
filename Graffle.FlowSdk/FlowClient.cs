@@ -45,6 +45,14 @@ namespace Graffle.FlowSdk
             return flowClient;
         }
 
+        public static FlowClient Create(GrpcChannel channel)
+        {
+            if (channel == null) throw new ArgumentNullException(nameof(channel));
+
+            var client = new Flow.Access.AccessAPI.AccessAPIClient(channel);
+            return new FlowClient(client);
+        }
+
         public async Task<bool> Ping()
         {
             var res = await client.PingAsync(new Flow.Access.PingRequest());
