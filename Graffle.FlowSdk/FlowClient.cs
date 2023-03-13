@@ -96,6 +96,17 @@ namespace Graffle.FlowSdk
             return await _client.ExecuteScriptAtBlockIDAsync(request, options);
         }
 
+        public async Task<Flow.Access.ExecuteScriptResponse> ExecuteScriptAtLatestBlockAsync(byte[] script, List<FlowValueType> args, CallOptions options = new CallOptions())
+        {
+            var scriptByteString = ByteString.CopyFrom(script);
+            var request = new Flow.Access.ExecuteScriptAtLatestBlockRequest() { Script = scriptByteString };
+
+            foreach (var arg in args)
+                request.Arguments.Add(arg.ToByteString());
+
+            return await _client.ExecuteScriptAtLatestBlockAsync(request, options);
+        }
+
         public async Task<Flow.Access.BlockResponse> GetBlockByHeightAsync(ulong blockHeight, CallOptions options = new CallOptions())
         {
             var request = new Flow.Access.GetBlockByHeightRequest() { Height = blockHeight };

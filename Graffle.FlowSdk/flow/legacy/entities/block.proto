@@ -1,13 +1,14 @@
 syntax = "proto3";
 
-package flow.entities;
+package entities;
 
-option go_package = "entities";
+option go_package = "github.com/onflow/flow/protobuf/go/flow/legacy/entities";
+option java_package = "org.onflow.protobuf.legacy.entities";
 
 import "google/protobuf/timestamp.proto";
 
-import "Proto/entities/collection.proto";
-import "Proto/entities/block_seal.proto";
+import "flow/legacy/entities/collection.proto";
+import "flow/legacy/entities/block_seal.proto";
 
 message Block {
   bytes id = 1;
