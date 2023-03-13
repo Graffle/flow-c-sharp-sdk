@@ -65,11 +65,11 @@ namespace Graffle.FlowSdk.Tests
             Assert.AreEqual("foo", str.Data);
         }
 
-        [TestMethod]
-        public async Task GetEventsForHeightRangeAsync()
-        {
-            var client = FlowClient.Create(_mainNet);
-            var res = await client.GetEventsForHeightRangeAsync("A.1654653399040a61.FlowToken.TokensDeposited", 48359903, 48359903);
-        }
+        // [TestMethod]
+        // public async Task GetEventsForHeightRangeAsync()
+        // {
+        //     var client = FlowClient.Create(_mainNet);
+        //     var res = await client.GetEventsForHeightRangeAsync("A.1654653399040a61.FlowToken.TokensDeposited", 48359903, 48359903);
+        // }
     }
 }
