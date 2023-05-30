@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -13,7 +14,13 @@ namespace Graffle.FlowSdk.Types
         {
             var parsedJson = JsonDocument.Parse(json);
             var value = parsedJson.RootElement.GetProperty("value");
-            return new BoolType(value.GetBoolean());
+            return value.ValueKind switch
+            {
+                JsonValueKind.False => new BoolType(value.GetBoolean()),
+                JsonValueKind.True => new BoolType(value.GetBoolean()),
+                JsonValueKind.String => new BoolType(Convert.ToBoolean(value.GetString())),
+                _ => throw new InvalidOperationException($"Invalid json element {value.ValueKind} encountered parsing bool type: {value.GetRawText()}")
+            };
         }
 
         [JsonPropertyName("type")]

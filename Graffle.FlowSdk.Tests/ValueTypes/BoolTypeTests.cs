@@ -32,5 +32,16 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var cadenceExpected = @"{""type"":""Bool"",""value"":true}";
             Assert.AreEqual(cadenceExpected, cadenceValue);
         }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void FromJson_StringValue(bool value)
+        {
+            var cadenceJsonString = $"{{\"type\":\"Bool\",\"value\":\"{value}\"}}";
+
+            var res = BoolType.FromJson(cadenceJsonString);
+            Assert.AreEqual(value, res.Data);
+        }
     }
 }
