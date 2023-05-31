@@ -43,5 +43,13 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var res = BoolType.FromJson(cadenceJsonString);
             Assert.AreEqual(value, res.Data);
         }
+
+        [TestMethod]
+        public void FromJson_InvalidValue()
+        {
+            var cadenceJsonString = @"{""type"":""Bool"",""value"":null}";
+
+            Assert.ThrowsException<InvalidOperationException>(() => BoolType.FromJson(cadenceJsonString));
+        }
     }
 }
