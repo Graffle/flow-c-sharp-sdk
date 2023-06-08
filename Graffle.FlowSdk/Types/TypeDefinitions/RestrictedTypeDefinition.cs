@@ -32,7 +32,9 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             var res = new Dictionary<string, dynamic>();
 
             res.Add("kind", Kind);
-            res.Add("typeID", TypeId);
+            if (!string.IsNullOrWhiteSpace(TypeId))
+                res.Add("typeID", TypeId);
+
             res.Add("type", Type.Flatten());
 
             List<dynamic> restrictions = new List<dynamic>();
