@@ -353,5 +353,13 @@ namespace Graffle.FlowSdk.Tests.ValueTypes
             var simple = arrType as SimpleTypeDefinition;
             Assert.AreEqual("String", simple.Kind);
         }
+
+        [TestMethod]
+        public void RestrictionHasNoTypeId()
+        {
+            var json = @"{""value"":{""staticType"":{""type"":"""",""kind"":""Resource"",""typeID"":""A.47611fd355457b4f.ExampleNFT.NFT"",""fields"":[{""type"":{""kind"":""UInt64""},""id"":""id""},{""type"":{""kind"":""String""},""id"":""name""},{""type"":{""kind"":""UInt64""},""id"":""uuid""},{""type"":{""key"":{""kind"":""String""},""value"":{""kind"":""AnyStruct""},""kind"":""Dictionary""},""id"":""metadata""},{""type"":{""type"":{""type"":"""",""kind"":""Struct"",""typeID"":""A.631e88ae7f1d7c20.MetadataViews.Royalty"",""fields"":[{""type"":{""kind"":""UFix64""},""id"":""cut""},{""type"":{""type"":{""type"":{""kind"":""Restriction"",""type"":{""kind"":""AnyResource""},""restrictions"":[{""type"":"""",""kind"":""ResourceInterface"",""typeID"":""A.9a0766d93b6608b7.FungibleToken.Receiver"",""fields"":[{""type"":{""kind"":""UInt64""},""id"":""uuid""}],""initializers"":[]}]},""kind"":""Reference"",""authorized"":false},""kind"":""Capability""},""id"":""receiver""},{""type"":{""kind"":""String""},""id"":""description""}],""initializers"":[]},""kind"":""VariableSizedArray""},""id"":""royalties""},{""type"":{""kind"":""String""},""id"":""thumbnail""},{""type"":{""kind"":""String""},""id"":""description""}],""initializers"":[]}},""type"":""Type""}";
+
+            var res = FlowType.FromJson(json);
+        }
     }
 }
