@@ -85,7 +85,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
                     return new OptionalTypeDefinition(optionalType);
                 case "Restriction":
                     var restrictionType = TypeDefinition.FromJson(root["type"]);
-                    var restrictionTypeId = root["typeID"];
+                    var restrictionTypeId = root.TryGetValue("typeID", out var tmpTypeId) ? tmpTypeId : string.Empty;
 
                     //todo this can be a function
                     var restrictionsJson = root["restrictions"];
