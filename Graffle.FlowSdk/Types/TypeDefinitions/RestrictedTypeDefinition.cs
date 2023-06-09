@@ -32,8 +32,7 @@ namespace Graffle.FlowSdk.Types.TypeDefinitions
             var res = new Dictionary<string, dynamic>();
 
             res.Add("kind", Kind);
-            if (!string.IsNullOrWhiteSpace(TypeId))
-                res.Add("typeID", TypeId);
+            res.Add("typeID", TypeId);
 
             res.Add("type", Type.Flatten());
 
