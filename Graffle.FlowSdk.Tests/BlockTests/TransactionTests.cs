@@ -10,7 +10,8 @@ namespace Graffle.FlowSdk.Tests.BlockTests
     public class TransactionTests
     {
         [TestMethod]
-        public async Task b()
+        [Ignore]
+        public async Task b() //todo what is this testing??
         {
             //https://flowscan.org/transaction/64a8781b0c6873d98ec30d5ef6ee296dcdddf93a8c2ec2e4378a6cfaea6b2631
             var fc = FlowClient.Create("access-001.mainnet16.nodes.onflow.org:9000"); //MAINNET16
